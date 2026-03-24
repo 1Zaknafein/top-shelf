@@ -2,27 +2,10 @@
 
 import { useState } from "react";
 import { AddGameForm } from "../components/AddGameForm";
+import { TierCard } from "../components/TierCard";
 import { TierRow } from "../components/TierRow";
+import { mockGameData } from "../lib/mockGames";
 import { Game } from "../types/types";
-
-const mockGameData: Game[] = [
-  {
-    id: 1,
-    name: "The Legend of Zelda: Breath of the Wild",
-    image: "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-  },
-  {
-    id: 2,
-    name: "Hollow Knight",
-    image: "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-    tier: "A",
-  },
-  {
-    id: 3,
-    name: "Among Us",
-    image: "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-  },
-];
 
 const tiers = ["S", "A", "B", "C", "D", "F"];
 
@@ -44,25 +27,38 @@ export default function Page() {
   const unassignedGames = games.filter((g) => !g.tier);
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
+    <div className="max-w-screen-2xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Top-Shelf Tier List</h1>
       <AddGameForm onAddGame={handleAddGame} />
 
-      {tiers.map((tier) => (
-        <TierRow
-          key={tier}
-          tier={tier}
-          description={`Description for ${tier} tier`}
-          games={getGamesByTier(tier)}
-        />
+      {tiers.map((tier) => 
+      (
+        <div key={tier} className={`my-4 flex items-stretch tier-${tier}`}>
+          <div className="w-1/5">
+            <TierCard tier={tier} className="h-full" />
+          </div>
+
+          <div className="flex-1">
+            <TierRow tier={tier} games={getGamesByTier(tier)} />
+          </div>
+        </div>
       ))}
 
-      {/* Unassigned row */}
-      <TierRow
-        tier="Unassigned"
-        description="Drag new games here"
-        games={unassignedGames}
-      />
+
+         {/* Unassigned row */}
+     <div className="my-4 w-full sm:w-11/12 lg:w-4/5 mx-auto flex items-stretch gap-4 tier-unassigned">
+        <div>
+          <TierCard tier="" className="h-full" />
+        </div>
+        <div className="flex-1">
+          <TierRow tier="" games={unassignedGames} />
+        </div>
+      </div> 
+
     </div>
   );
 }
+
+
+
+   
