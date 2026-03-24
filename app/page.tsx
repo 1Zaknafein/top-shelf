@@ -9,7 +9,7 @@ import { Game } from "../types/types";
 
 const tiers = ["S", "A", "B", "C", "D", "F"];
 
-const rowMinHeight = 96;
+const rowMinHeight = 72;
 const imgWidth = Math.round((rowMinHeight * 16) / 9);
 
 export default function Page() {

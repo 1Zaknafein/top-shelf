@@ -12,29 +12,29 @@
 }
 
 .tier-S {
-  --tier-color: #fff5de;
-  --tier-color-border: #ffd16614;
-  --tier-color-glow: #ffd16659;
+  --tier-color: #ffd700;
+  --tier-color-border: #ffd70014;
+  --tier-color-glow: #ffd70059;
 }
 .tier-A {
-  --tier-color: #ff7b7b;
-  --tier-color-border: #ff7b7b14;
-  --tier-color-glow: #ff7b7b59;
+  --tier-color: #34d399;
+  --tier-color-border: #34d39914;
+  --tier-color-glow: #34d39959;
 }
 .tier-B {
-  --tier-color: #ffd54a;
-  --tier-color-border: #ffd54a14;
-  --tier-color-glow: #ffd54a59;
+  --tier-color: #3b82f6;
+  --tier-color-border: #3b82f614;
+  --tier-color-glow: #3b82f659;
 }
 .tier-C {
-  --tier-color: #7ef2b6;
-  --tier-color-border: #7ef2b614;
-  --tier-color-glow: #7ef2b659;
+  --tier-color: #c084fc;
+  --tier-color-border: #c084fc14;
+  --tier-color-glow: #c084fc59;
 }
 .tier-D {
-  --tier-color: #8fc9ff;
-  --tier-color-border: #8fc9ff14;
-  --tier-color-glow: #8fc9ff59;
+  --tier-color: #ef4444;
+  --tier-color-border: #ef444414;
+  --tier-color-glow: rgba(239, 68, 68, 0);
 }
 .tier-E {
   --tier-color: #caa6ff;
@@ -42,9 +42,9 @@
   --tier-color-glow: #caa6ff59;
 }
 .tier-F {
-  --tier-color: #9aa0a6;
-  --tier-color-border: #9aa0a614;
-  --tier-color-glow: #9aa0a659;
+  --tier-color: #0f0f0f;
+  --tier-color-border: #2b2b2b14;
+  --tier-color-glow: rgba(43, 43, 43, 0);
 }
 .tier-unassigned {
   --tier-color: #9ca3af;
