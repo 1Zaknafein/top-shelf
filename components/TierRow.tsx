@@ -4,27 +4,27 @@ import { GameCard } from "./GameCard";
 interface TierRowProps {
   tier: string;
   games: Game[];
+  imgWidth: number;
+  imgHeight: number;
 }
 
 const tiers = new Set(["S", "A", "B", "C", "D", "E", "F"]);
 
-export function TierRow({ tier, games }: TierRowProps) {
+export function TierRow({ tier, games, imgWidth, imgHeight }: TierRowProps) {
   const key = tiers.has(tier) ? tier : "unassigned";
 
   return (
-    <div className={`tier-row my-4 w-full max-w-full rounded-md p-3 min-h-[100px] tier-${key} ${
-      key === "unassigned"
-        ? "bg-[#131313] border border-gray-800"
-        : "bg-(--inner-fill) border border-(--tier-color-border)"
-    }`}>
-
-      <div className="flex flex-wrap gap-6 py-2 items-start">
+    <div
+      className={`tier-row tier-${key} bg-(--inner-fill) border border-(--tier-color-border)`}
+      style={{ minHeight: `${imgHeight}px` }}
+    >
+      <div className="flex flex-wrap">
         {games.map((game) => (
           <div
             key={game.id}
-            className="game-wrapper p-[2px] flex-none mr-24 mb-[10px] mr-[10px] inline-block"
+            className="game-wrapper flex-none inline-block p-[6px]"
           >
-            <GameCard game={game} />
+            <GameCard game={game} imgWidth={imgWidth} imgHeight={imgHeight} />
           </div>
         ))}
       </div>

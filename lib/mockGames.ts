@@ -21,9 +21,16 @@ const baseGames: Game[] = [
     image:
       "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
   },
+  {
+    id: 4,
+    name: "Title",
+    image:
+      "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
+    tier: "C",
+  },
 ];
 
-export const mockGameData: Game[] = Array.from({ length: 30 }).map((_, i) => {
+export const mockGameData: Game[] = Array.from({ length: 18 }).map((_, i) => {
   const base = baseGames[i % baseGames.length];
   return {
     ...base,

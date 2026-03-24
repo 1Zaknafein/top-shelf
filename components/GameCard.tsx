@@ -3,20 +3,27 @@ import { Game } from "../types/types";
 
 interface GameCardProps {
   game: Game;
+  imgWidth: number;
+  imgHeight: number;
 }
 
-export function GameCard({ game }: GameCardProps) {
+export function GameCard({ game, imgWidth, imgHeight }: GameCardProps) {
+  const glowStyle = game.tier
+    ? {
+        boxShadow:
+          "0 0 6px var(--tier-color-glow), 0 2px 8px var(--tier-color-glow)",
+      }
+    : undefined;
 
   return (
-    <div className="game-card w-24 h-32 rounded-lg overflow-hidden shadow-lg bg-white cursor-move hover:scale-105 transform transition">
+    <div className={`game-card overflow-hidden cursor-move`} style={glowStyle}>
       <div className="w-full h-full flex items-center justify-center">
-
-        { /* RAWG images have 16x9 aspect ratio */}
         <Image
           src={game.image}
           alt={game.name}
-          width={128}
-          height={72}
+          width={imgWidth}
+          height={imgHeight}
+          loading="eager"
           className="object-cover"
         />
       </div>

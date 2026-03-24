@@ -2,25 +2,58 @@
 
 :root {
   --background: #0e0e0e;
-  --foreground: #e6e6e6; 
+  --foreground: #e6e6e6;
 
-  --inner-fill: #1a1919; 
+  --inner-fill: #1a1919;
 
   --tier-color: #ffd166;
   --tier-color-border: #ffd16614;
   --tier-color-glow: #ffd16659;
 }
 
-.tier-S { --tier-color: #ffd166; --tier-color-border: #ffd16614; --tier-color-glow: #ffd16659; }
-.tier-A { --tier-color: #ff7b7b; --tier-color-border: #ff7b7b14; --tier-color-glow: #ff7b7b59; }
-.tier-B { --tier-color: #ffd54a; --tier-color-border: #ffd54a14; --tier-color-glow: #ffd54a59; }
-.tier-C { --tier-color: #7ef2b6; --tier-color-border: #7ef2b614; --tier-color-glow: #7ef2b659; }
-.tier-D { --tier-color: #8fc9ff; --tier-color-border: #8fc9ff14; --tier-color-glow: #8fc9ff59; }
-.tier-E { --tier-color: #caa6ff; --tier-color-border: #caa6ff14; --tier-color-glow: #caa6ff59; }
-.tier-F { --tier-color: #9aa0a6; --tier-color-border: #9aa0a614; --tier-color-glow: #9aa0a659; }
-.tier-unassigned { --tier-color: #9ca3af; --tier-color-border: #9ca3af14; --tier-color-glow: #9ca3af59; }
+.tier-S {
+  --tier-color: #fff5de;
+  --tier-color-border: #ffd16614;
+  --tier-color-glow: #ffd16659;
+}
+.tier-A {
+  --tier-color: #ff7b7b;
+  --tier-color-border: #ff7b7b14;
+  --tier-color-glow: #ff7b7b59;
+}
+.tier-B {
+  --tier-color: #ffd54a;
+  --tier-color-border: #ffd54a14;
+  --tier-color-glow: #ffd54a59;
+}
+.tier-C {
+  --tier-color: #7ef2b6;
+  --tier-color-border: #7ef2b614;
+  --tier-color-glow: #7ef2b659;
+}
+.tier-D {
+  --tier-color: #8fc9ff;
+  --tier-color-border: #8fc9ff14;
+  --tier-color-glow: #8fc9ff59;
+}
+.tier-E {
+  --tier-color: #caa6ff;
+  --tier-color-border: #caa6ff14;
+  --tier-color-glow: #caa6ff59;
+}
+.tier-F {
+  --tier-color: #9aa0a6;
+  --tier-color-border: #9aa0a614;
+  --tier-color-glow: #9aa0a659;
+}
+.tier-unassigned {
+  --tier-color: #9ca3af;
+  --tier-color-border: #9ca3af14;
+  --tier-color-glow: #9ca3af59;
+}
 
-html, body {
+html,
+body {
   height: 100%;
   background: var(--background);
   color: var(--foreground);
@@ -28,21 +61,28 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 .tier-text-glow {
-  text-shadow: 0 0 10px var(--tier-color-glow), 0 2px 6px var(--tier-color-glow);
+  text-shadow:
+    0 0 10px var(--tier-color-glow),
+    0 2px 6px var(--tier-color-glow);
 }
 
 .tier-text {
   color: var(--tier-color);
-  text-shadow: 0 0 10px var(--tier-color-glow), 0 2px 6px var(--tier-color-glow);
+  text-shadow:
+    0 0 10px var(--tier-color-glow),
+    0 2px 6px var(--tier-color-glow);
   font-weight: bold;
-  font-size: 4rem; 
+  font-size: 4rem;
   line-height: 1;
 }
 
 @media (min-width: 640px) {
   .tier-text {
-    font-size: 4rem; 
+    font-size: 4rem;
   }
+}
+
+.glow {
+  box-shadow: 0 0 2px 2px #48abe0;
 }
