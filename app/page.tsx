@@ -39,7 +39,7 @@ export default function Page() {
           key={tier}
           className={`gap-[10px] my-[10px] flex items-stretch tier-${tier}`}
         >
-          <div className="w-1/5">
+          <div className="min-w-[150px] w-[150px]">
             <TierCard tier={tier} className="h-full" />
           </div>
 
