@@ -1,39 +1,48 @@
 import { Game } from "../types/types";
 
-const baseGames: Game[] = [
+// Set how many games you want per tier/undefined
+const S_COUNT = 3;
+const A_COUNT = 5;
+const B_COUNT = 4;
+const C_COUNT = 2;
+const UNDEFINED_COUNT = 20;
+
+const baseGames: Omit<Game, "id">[] = [
   {
-    id: 1,
-    name: "The Legend of Zelda: Breath of the Wild",
-    image:
-      "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-    tier: "A",
-  },
-  {
-    id: 2,
-    name: "Hollow Knight",
-    image:
-      "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-    tier: "S",
-  },
-  {
-    id: 3,
-    name: "Among Us",
-    image:
-      "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-  },
-  {
-    id: 4,
     name: "Title",
     image:
       "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-    tier: "C",
+    tier: "",
   },
 ];
 
-export const mockGameData: Game[] = Array.from({ length: 18 }).map((_, i) => {
-  const base = baseGames[i % baseGames.length];
-  return {
-    ...base,
-    id: i + 1,
-  } as Game;
-});
+function generateGames(count: number, tier?: string, startId = 1): Game[] {
+  return Array.from({ length: count }).map((_, i) => {
+    const base =
+      baseGames[(i + (tier ? tier.charCodeAt(0) : 0)) % baseGames.length];
+    return {
+      ...base,
+      id: startId + i,
+      tier: tier ?? undefined,
+    };
+  });
+}
+
+let currentId = 1;
+const sGames = generateGames(S_COUNT, "S", currentId);
+currentId += S_COUNT;
+const aGames = generateGames(A_COUNT, "A", currentId);
+currentId += A_COUNT;
+const bGames = generateGames(B_COUNT, "B", currentId);
+currentId += B_COUNT;
+const cGames = generateGames(C_COUNT, "C", currentId);
+currentId += C_COUNT;
+const undefinedGames = generateGames(UNDEFINED_COUNT, undefined, currentId);
+
+export const mockGameData: Game[] = [
+  ...sGames,
+  ...aGames,
+  ...bGames,
+  ...cGames,
+  ...undefinedGames,
+];
