@@ -21,13 +21,13 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
     <Drawer>
       <DrawerTrigger asChild>
         <Button
-          className={`bg-tier-card rounded-lg w-20 justify-center text-5xl h-20 transition-transform hover:scale-105 active:scale-95 hover:bg-teal-900`}
+          className={`glass-bg rounded-lg w-20 justify-center text-5xl h-20 hover:scale-102 active:scale-95`}
         >
           +
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[50vh] data-[vaul-drawer-direction=top]:max-h-[50vh] bg-background">
+      <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[50vh] data-[vaul-drawer-direction=top]:max-h-[50vh] bg-background/96">
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
             <div className="flex flex-col items-center justify-center space-x-2">

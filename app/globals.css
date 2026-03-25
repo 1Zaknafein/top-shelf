@@ -3,13 +3,6 @@
 
 @tailwind utilities;
 
-body.bg-image {
-  background-image: url("/bg.webp");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -172,9 +165,9 @@ body.bg-image {
   --tier-color-glow: rgba(239, 68, 68, 0);
 }
 .tier-E {
-  --tier-color: #caa6ff;
-  --tier-color-border: #caa6ffff;
-  --tier-color-glow: #caa6ff59;
+  --tier-color: #8737ff;
+  --tier-color-border: #8737ff25;
+  --tier-color-glow: #8737ff59;
 }
 .tier-F {
   --tier-color: rgb(8, 8, 8);
@@ -182,18 +175,26 @@ body.bg-image {
   --tier-color-glow: rgba(43, 43, 43, 0);
 }
 .tier-unassigned {
-  --tier-color: #9ca3af;
-  --tier-color-border: #9ca3af14;
-  --tier-color-glow: #9ca3af59;
+  --tier-color: #8b8c8d96;
+  --tier-color-border: #9ca3af0c;
+  --tier-color-glow: #9ca3af15;
 }
 
 html,
 body {
   height: 100%;
-  background: var(--background);
-  color: var(--foreground);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("/bg.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
 }
 
 .tier-text-glow {

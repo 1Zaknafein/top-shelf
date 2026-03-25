@@ -7,7 +7,7 @@ import { TierRow } from "../components/tier-row";
 import { mockGameData } from "../lib/mockGames";
 import { Game } from "../types/types";
 
-const tiers = ["S", "A", "B", "C", "D", "F"];
+const tiers = ["S", "A", "B", "C", "D", "E", "F"];
 
 export default function Page() {
   const [games, setGames] = useState<Game[]>(mockGameData);
@@ -19,7 +19,7 @@ export default function Page() {
     function updateHeight() {
       const width = window.innerWidth;
 
-      if (width >= 768) setRowMinHeight(80);
+      if (width >= 768) setRowMinHeight(72);
       else if (width >= 640) setRowMinHeight(54);
     }
 
@@ -38,7 +38,6 @@ export default function Page() {
   return (
     <div className="mx:0 md:mx-50">
       <h1 className="text-3xl font-bold mb-4">Top-Shelf Tier List</h1>
-
       {tiers.map((tier) => (
         <div
           key={tier}
@@ -57,8 +56,8 @@ export default function Page() {
           </div>
         </div>
       ))}
-
-      {/* Unassigned row */}
+      <span className="flex pt-10 text-2xl font-bold">Unassigned games</span>
+      <hr className="w-full border-t-2 border-border my-4 opacity-20" />
 
       <div key="unassigned" className={`gap-2 my-10 flex items-stretch `}>
         <AddNewItem
@@ -70,7 +69,7 @@ export default function Page() {
           }
         />
 
-        <div className="flex-1">
+        <div className="flex-1 tier-unassigned">
           <TierRow
             games={unassignedGames}
             imgWidth={imgWidth}
