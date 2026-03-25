@@ -1,0 +1,37 @@
+button {
+  position: relative;
+  outline-offset: 4px;
+  transition: filter 250ms;
+}
+
+button:active .front {
+  transform: translateY(-2px);
+  transition: transform 34ms;
+}
+
+.edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: linear-gradient(
+    to right,
+    hsl(140, 100%, 12%) 0%,
+    hsl(92, 81%, 12%),
+    hsl(93, 79%, 13%),
+    hsl(140, 100%, 16%) 100%
+  );
+}
+
+.front {
+  display: block;
+  position: relative;
+  padding: 12px 27px;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  color: rgb(255, 255, 255);
+  background: hsl(93, 83%, 31%);
+  transform: translateY(-6px);
+}

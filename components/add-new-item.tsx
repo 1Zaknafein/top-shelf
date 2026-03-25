@@ -1,9 +1,9 @@
 "use client";
 
+import "@/app/add-button.css";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -12,61 +12,142 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Plus } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 interface AddGameButtonProps {
   onAddGame: (name: string) => void;
 }
 
 export function AddNewItem({ onAddGame }: AddGameButtonProps) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [searchResult, setSearchResult] = useState<null | {
+    title: string;
+    image: string;
+  }>(null);
+
+  const handleSearch = async () => {
+    if (!inputValue.trim()) return;
+    setSearching(true);
+    setSearchResult(null);
+
+    // TODO: Replace with actual RAWG API call
+    setTimeout(() => {
+      setSearchResult({
+        title: inputValue.trim(),
+        image: "/placeholder.webp",
+      });
+      setSearching(false);
+    }, 1000);
+  };
+
+  const handleAdd = () => {
+    if (searchResult) {
+      onAddGame(searchResult.title);
+      setSearchResult(null);
+      setSearching(false);
+      setInputValue("");
+    }
+  };
+
+  const handleClose = () => {
+    setInputValue("");
+    setSearching(false);
+    setSearchResult(null);
+  };
+
   return (
-    <Drawer>
+    <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
       <DrawerTrigger asChild>
-        <Button
-          className={`glass-bg rounded-lg w-20 justify-center h-20 hover:scale-102 active:scale-95`}
-        >
+        <Button className="glass-bg rounded-lg w-20 justify-center h-20 hover:scale-102 active:scale-95">
           <Plus style={{ width: "40px", height: "40px" }} />
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[50vh] data-[vaul-drawer-direction=top]:max-h-[50vh] bg-background/96">
+      <DrawerContent className="data-[vaul-drawer-direction=top]:max-h-[50vh] bg-background/96">
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
             <div className="flex flex-col items-center justify-center space-x-2">
-              <DrawerTitle>Add a new item</DrawerTitle>
+              <DrawerTitle>
+                {searching
+                  ? "Searching..."
+                  : searchResult
+                    ? ""
+                    : "Add a new item"}
+              </DrawerTitle>
+
               <DrawerDescription>
-                Enter the title you want to add.
+                {searching
+                  ? "Please wait while we fetch game data."
+                  : searchResult
+                    ? "Click Add to insert this game into your list."
+                    : "Enter the title you want to search."}
               </DrawerDescription>
             </div>
           </DrawerHeader>
 
-          <form
-            className="space-y-4 p-2"
-            onSubmit={(e) => {
-              e.preventDefault();
+          {/* Input State */}
+          {!searchResult && !searching && (
+            <form
+              className="space-y-4 p-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSearch();
+              }}
+            >
+              <input
+                type="text"
+                name="gameName"
+                placeholder="Game name..."
+                className="w-full border rounded px-2 py-2 text-secondary"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+              <DrawerFooter className="flex justify-end gap-2">
+                <Button
+                  type="submit"
+                  disabled={searching || !inputValue.trim()}
+                >
+                  Search
+                </Button>
+              </DrawerFooter>
+            </form>
+          )}
 
-              const input = (e.target as HTMLFormElement).elements.namedItem(
-                "gameName",
-              ) as HTMLInputElement;
+          {/* Result State */}
+          {searchResult && (
+            <div className="flex flex-col items-center space-y-4 p-4">
+              <span className="text-lg font-semibold text-secondary">
+                {searchResult.title}
+              </span>
+              <div className="w-32 h-20 relative rounded overflow-hidden">
+                <Image
+                  src={searchResult.image}
+                  alt={searchResult.title}
+                  fill
+                  sizes="128px"
+                  className="object-cover"
+                />
+              </div>
 
-              if (input.value.trim()) {
-                onAddGame(input.value.trim());
-                input.value = "";
-              }
-            }}
-          >
-            <input
-              type="text"
-              name="gameName"
-              placeholder="Game name..."
-              className="w-full border rounded px-2 py-2 text-secondary"
-            />
-            <DrawerFooter className="flex justify-end gap-2">
-              <DrawerClose asChild>
-                <Button className="text-secondary">Cancel</Button>
-              </DrawerClose>
-              <Button type="submit">Add</Button>
-            </DrawerFooter>
-          </form>
+              <DrawerFooter className="flex flex-col items-center gap-2 w-full">
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  className="fancy-add-btn mb-2 w-50"
+                >
+                  <span className="shadow"></span>
+                  <span className="edge"></span>
+                  <span className="front">Add</span>
+                </button>
+                <Button className="w-32 mx-auto" onClick={handleClose}>
+                  Cancel
+                </Button>
+              </DrawerFooter>
+            </div>
+          )}
         </div>
       </DrawerContent>
     </Drawer>
