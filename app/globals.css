@@ -1,14 +1,14 @@
+@import "tailwindcss";
+@import "shadcn/tailwind.css";
+
+@tailwind utilities;
+
 body.bg-image {
   background-image: url("/bg.webp");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
 }
-
-@tailwind utilities;
-
-@import "tailwindcss";
-@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -136,39 +136,49 @@ body.bg-image {
   }
 }
 
+.glass-bg {
+  background: rgba(30, 30, 40, 0.45);
+  box-shadow:
+    0 4px 32px 0 rgba(0, 0, 0, 0.5),
+    0 3px 6px 0 var(--tier-color-border, rgba(255, 255, 255, 0.3));
+  border: 2.5px solid var(--tier-color-border, rgba(255, 255, 255, 0.35));
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+}
+
 .tier-S {
   --tier-color: #ffd700;
-  --tier-color-border: #ffd70014;
+  --tier-color-border: #ffd70090;
   --tier-color-glow: #ffd70059;
 }
 .tier-A {
   --tier-color: #34d399;
-  --tier-color-border: #34d39914;
+  --tier-color-border: #34d39970;
   --tier-color-glow: #34d39959;
 }
 .tier-B {
   --tier-color: #3b82f6;
-  --tier-color-border: #3b82f614;
+  --tier-color-border: #3b82f660;
   --tier-color-glow: #3b82f659;
 }
 .tier-C {
   --tier-color: #c084fc;
-  --tier-color-border: #c084fc14;
+  --tier-color-border: #c084fc40;
   --tier-color-glow: #c084fc59;
 }
 .tier-D {
   --tier-color: #ef4444;
-  --tier-color-border: #ef444414;
+  --tier-color-border: #ef444425;
   --tier-color-glow: rgba(239, 68, 68, 0);
 }
 .tier-E {
   --tier-color: #caa6ff;
-  --tier-color-border: #caa6ff14;
+  --tier-color-border: #caa6ffff;
   --tier-color-glow: #caa6ff59;
 }
 .tier-F {
-  --tier-color: #0f0f0f;
-  --tier-color-border: #2b2b2b14;
+  --tier-color: rgb(8, 8, 8);
+  --tier-color-border: #2b2b2b20;
   --tier-color-glow: rgba(43, 43, 43, 0);
 }
 .tier-unassigned {

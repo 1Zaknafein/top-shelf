@@ -10,7 +10,7 @@ interface TierRowProps {
 export function TierRow({ games, imgWidth, imgHeight }: TierRowProps) {
   return (
     <div
-      className={`tier-row bg-inner-fill rounded-lg `}
+      className={"tier-row glass-bg rounded-lg"}
       style={{ minHeight: `${imgHeight}px` }}
     >
       <div className="flex flex-wrap">
