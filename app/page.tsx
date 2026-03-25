@@ -1,6 +1,6 @@
 "use client";
 
-import { AddGameButton } from "@/components/add-game-button";
+import { AddNewItem } from "@/components/add-new-item";
 import { useEffect, useState } from "react";
 import { TierCard } from "../components/tier-card";
 import { TierRow } from "../components/tier-row";
@@ -19,7 +19,7 @@ export default function Page() {
     function updateHeight() {
       const width = window.innerWidth;
 
-      if (width >= 768) setRowMinHeight(72);
+      if (width >= 768) setRowMinHeight(80);
       else if (width >= 640) setRowMinHeight(54);
     }
 
@@ -42,7 +42,7 @@ export default function Page() {
       {tiers.map((tier) => (
         <div
           key={tier}
-          className={`gap-2 my-2 flex items-stretch tier-${tier}`}
+          className={`gap-2 my-4 flex items-stretch tier-${tier}`}
         >
           <div>
             <TierCard tier={tier} className="h-full" />
@@ -59,22 +59,25 @@ export default function Page() {
       ))}
 
       {/* Unassigned row */}
-      <div className="flex-1">
-        <TierRow
-          games={unassignedGames}
-          imgWidth={imgWidth}
-          imgHeight={rowMinHeight}
-        />
-      </div>
 
-      <AddGameButton
-        onAddGame={(name) =>
-          setGames([
-            ...games,
-            { id: Date.now(), name, image: "/placeholder.webp", tier: "" },
-          ])
-        }
-      />
+      <div key="unassigned" className={`gap-2 my-10 flex items-stretch `}>
+        <AddNewItem
+          onAddGame={(name) =>
+            setGames([
+              ...games,
+              { id: Date.now(), name, image: "/placeholder.webp", tier: "" },
+            ])
+          }
+        />
+
+        <div className="flex-1">
+          <TierRow
+            games={unassignedGames}
+            imgWidth={imgWidth}
+            imgHeight={rowMinHeight}
+          />
+        </div>
+      </div>
     </div>
   );
 }
