@@ -11,6 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Plus } from "lucide-react";
 
 interface AddGameButtonProps {
   onAddGame: (name: string) => void;
@@ -21,9 +22,9 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
     <Drawer>
       <DrawerTrigger asChild>
         <Button
-          className={`glass-bg rounded-lg w-20 justify-center text-5xl h-20 hover:scale-102 active:scale-95`}
+          className={`glass-bg rounded-lg w-20 justify-center h-20 hover:scale-102 active:scale-95`}
         >
-          +
+          <Plus style={{ width: "40px", height: "40px" }} />
         </Button>
       </DrawerTrigger>
 
@@ -61,9 +62,7 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
             />
             <DrawerFooter className="flex justify-end gap-2">
               <DrawerClose asChild>
-                <Button variant="outline" className="text-secondary">
-                  Cancel
-                </Button>
+                <Button className="text-secondary">Cancel</Button>
               </DrawerClose>
               <Button type="submit">Add</Button>
             </DrawerFooter>

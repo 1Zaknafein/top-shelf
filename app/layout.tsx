@@ -1,9 +1,13 @@
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Carter_One } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const carterOne = Carter_One({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "Top Shelf Tier List",
@@ -18,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", "font-sans", inter.variable)}
+      className={cn("h-full", "antialiased", "font-sans", carterOne.variable)}
     >
       <body className="min-h-full flex flex-col bg-image">{children}</body>
     </html>

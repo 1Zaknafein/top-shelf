@@ -37,7 +37,14 @@ export default function Page() {
 
   return (
     <div className="mx:0 md:mx-50">
-      <h1 className="text-3xl font-bold mb-4">Top-Shelf Tier List</h1>
+      <div className="flex flex-col gap-2 items-center justify-center text-center">
+        <h1 className="text-4xl font-bold pt-6">Top Shelf</h1>
+        <hr className="hr-fade h-0.5 w-100 my-4" />
+        <h2 className="text-lg font-medium mb-4 text-secondary/50">
+          Rank your favorites!
+        </h2>
+      </div>
+
       {tiers.map((tier) => (
         <div
           key={tier}

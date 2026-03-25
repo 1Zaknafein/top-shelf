@@ -184,6 +184,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  font-weight: 400;
 }
 
 body::before {
@@ -221,4 +222,16 @@ body::before {
 
 .glow {
   box-shadow: 0 0 2px 2px #48abe0;
+}
+
+.hr-fade {
+  border: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border, #e5e7eb) 40%,
+    var(--border, #e5e7eb) 60%,
+    transparent
+  );
+  opacity: 0.7;
 }
