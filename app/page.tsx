@@ -1,28 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { AddGameForm } from "../components/AddGameForm";
-import { TierCard } from "../components/TierCard";
-import { TierRow } from "../components/TierRow";
+import { AddGameButton } from "@/components/add-game-button";
+import { useEffect, useState } from "react";
+import { TierCard } from "../components/tier-card";
+import { TierRow } from "../components/tier-row";
 import { mockGameData } from "../lib/mockGames";
 import { Game } from "../types/types";
 
 const tiers = ["S", "A", "B", "C", "D", "F"];
 
-const rowMinHeight = 72;
-const imgWidth = Math.round((rowMinHeight * 16) / 9);
-
 export default function Page() {
   const [games, setGames] = useState<Game[]>(mockGameData);
 
-  const handleAddGame = (name: string) => {
-    const newGame: Game = {
-      id: Date.now(),
-      name,
-      image: "https://via.placeholder.com/96x96.png?text=Game",
-    };
-    setGames((prev) => [...prev, newGame]);
-  };
+  const [rowMinHeight, setRowMinHeight] = useState(72);
+  const aspectRatio = 16 / 9;
+
+  useEffect(() => {
+    function updateHeight() {
+      const width = window.innerWidth;
+
+      if (width >= 768) setRowMinHeight(72);
+      else if (width >= 640) setRowMinHeight(54);
+    }
+
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+
+  const imgWidth = Math.round(rowMinHeight * aspectRatio);
 
   const getGamesByTier = (tier?: string) =>
     games.filter((g) => g.tier === tier);
@@ -30,22 +36,20 @@ export default function Page() {
   const unassignedGames = games.filter((g) => !g.tier);
 
   return (
-    <div className="mx-[150px]">
+    <div className="mx:0 md:mx-50">
       <h1 className="text-3xl font-bold mb-4">Top-Shelf Tier List</h1>
-      <AddGameForm onAddGame={handleAddGame} />
 
       {tiers.map((tier) => (
         <div
           key={tier}
-          className={`gap-[10px] my-[10px] flex items-stretch tier-${tier}`}
+          className={`gap-2 my-2 flex items-stretch tier-${tier}`}
         >
-          <div className="min-w-[150px] w-[150px]">
+          <div>
             <TierCard tier={tier} className="h-full" />
           </div>
 
           <div className="flex-1">
             <TierRow
-              tier={tier}
               games={getGamesByTier(tier)}
               imgWidth={imgWidth}
               imgHeight={rowMinHeight}
@@ -55,19 +59,22 @@ export default function Page() {
       ))}
 
       {/* Unassigned row */}
-      <div className="my-4 w-full sm:w-11/12 lg:w-4/5 mx-auto flex items-stretch gap-4 tier-unassigned">
-        <div>
-          <TierCard tier="" className="h-full" />
-        </div>
-        <div className="flex-1">
-          <TierRow
-            tier=""
-            games={unassignedGames}
-            imgWidth={imgWidth}
-            imgHeight={rowMinHeight}
-          />
-        </div>
+      <div className="flex-1">
+        <TierRow
+          games={unassignedGames}
+          imgWidth={imgWidth}
+          imgHeight={rowMinHeight}
+        />
       </div>
+
+      <AddGameButton
+        onAddGame={(name) =>
+          setGames([
+            ...games,
+            { id: Date.now(), name, image: "/placeholder.webp", tier: "" },
+          ])
+        }
+      />
     </div>
   );
 }

@@ -1,28 +1,23 @@
 import { Game } from "@/types/types";
-import { GameCard } from "./GameCard";
+import { GameCard } from "./game-card";
 
 interface TierRowProps {
-  tier: string;
   games: Game[];
   imgWidth: number;
   imgHeight: number;
 }
 
-const tiers = new Set(["S", "A", "B", "C", "D", "E", "F"]);
-
-export function TierRow({ tier, games, imgWidth, imgHeight }: TierRowProps) {
-  const key = tiers.has(tier) ? tier : "unassigned";
-
+export function TierRow({ games, imgWidth, imgHeight }: TierRowProps) {
   return (
     <div
-      className={`tier-row tier-${key} bg-(--inner-fill) border border-(--tier-color-border)`}
+      className={`tier-row bg-inner-fill rounded-lg `}
       style={{ minHeight: `${imgHeight}px` }}
     >
       <div className="flex flex-wrap">
         {games.map((game) => (
           <div
             key={game.id}
-            className="game-wrapper flex-none inline-block p-[6px]"
+            className="game-wrapper flex-none inline-block p-1.5"
           >
             <GameCard game={game} imgWidth={imgWidth} imgHeight={imgHeight} />
           </div>
