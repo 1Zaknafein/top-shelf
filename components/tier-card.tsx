@@ -6,7 +6,7 @@ interface TierCardProps {
 export function TierCard({ tier, className = "" }: TierCardProps) {
   return (
     <div
-      className={`glass-bg w-20 h-20 flex items-center justify-center rounded-lg ${className}`}
+      className={`glass-bg w-20 h-20 flex items-center justify-center rounded-lg select-none ${className}`}
       style={{ boxShadow: "0 8px 20px var(--tier-color-border)" }}
     >
       <span className="tier-text">{tier}</span>
