@@ -13,15 +13,14 @@ import { mockGameData } from "../lib/mockGames";
 import { Game } from "../types/types";
 
 const tiers = ["S", "A", "B", "C", "D", "E", "F"];
+const cardAspectRatio = 16 / 9;
 
 export default function Page() {
   const [games, setGames] = useState<Game[]>(mockGameData);
   const [showSettings, setShowSettings] = useState(false);
+  const [rowMinHeight, setRowMinHeight] = useState(60);
 
-  const [rowMinHeight, setRowMinHeight] = useState(72);
-  const aspectRatio = 16 / 9;
-
-  const imgWidth = Math.round(rowMinHeight * aspectRatio);
+  const imgWidth = Math.round(rowMinHeight * cardAspectRatio);
 
   const getGamesByTier = (tier?: string) =>
     games.filter((g) => g.tier === tier);
@@ -39,9 +38,9 @@ export default function Page() {
           </h2>
         </div>
 
-        <div className="flex justify-end mr-1">
+        <div className="flex justify-end mr-1 -mt-3">
           <Button
-            className="glass-bg flex rounded-full p-2 h-auto w-auto z-50"
+            className="glass-bg rounded-full p-2 h-auto w-auto "
             onClick={() => setShowSettings((v) => !v)}
           >
             <Settings style={{ width: "30px", height: "30px" }} />

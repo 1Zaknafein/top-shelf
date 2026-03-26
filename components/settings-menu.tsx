@@ -17,14 +17,18 @@ export function SettingsMenu({
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger>Open</DialogTrigger>
-      <DialogContent className="bg-tier-card text-foreground">
+
+      <DialogContent
+        showCloseButton={false}
+        className="bg-tier-card text-foreground"
+      >
         Card size: {rowMinHeight}px
         <Slider
           defaultValue={rowMinHeight}
           max={100}
           min={60}
           step={1}
-          className="bg-tier-card  w-full max-w-xs"
+          className="bg-tier-card w-full"
           onChange={(value) => setRowMinHeight(value.target.valueAsNumber)}
         />
       </DialogContent>
