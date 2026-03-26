@@ -30,7 +30,7 @@ interface Props {
 export default function MainPage({ initialGames }: Props) {
   const [games, setGames] = useState<Game[]>(initialGames);
   const [showSettings, setShowSettings] = useState(false);
-  const [rowMinHeight, setRowMinHeight] = useState(60);
+  const [rowMinHeight, setRowMinHeight] = useState(64);
 
   const imgWidth = Math.round(rowMinHeight * cardAspectRatio);
 

@@ -26,7 +26,7 @@ export function SettingsMenu({
         <Slider
           defaultValue={rowMinHeight}
           max={100}
-          min={60}
+          min={64}
           step={1}
           className="bg-tier-card w-full"
           onChange={(value) => setRowMinHeight(value.target.valueAsNumber)}
