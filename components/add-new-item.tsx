@@ -14,6 +14,7 @@ import {
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface AddGameButtonProps {
   onAddGame: (name: string) => void;
@@ -49,6 +50,12 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
       setSearchResult(null);
       setSearching(false);
       setInputValue("");
+
+      // TODO Check if game was actually added. If it already exists, show an error toast instead.
+      toast("Game has been added!", {
+        position: "bottom-right",
+        duration: 2000,
+      });
     }
   };
 

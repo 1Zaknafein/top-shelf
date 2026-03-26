@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Carter_One } from "next/font/google";
@@ -24,7 +25,10 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "antialiased", "font-sans", carterOne.variable)}
     >
-      <body className="min-h-full flex flex-col bg-image">{children}</body>
+      <body className="min-h-full flex flex-col bg-image">
+        <main>{children} </main>
+        <Toaster />
+      </body>
     </html>
   );
 }
