@@ -24,7 +24,7 @@ export function HoverPopup() {
       }}
       className="flex flex-col items-center bg-tier-card text-popover-foreground rounded-lg shadow-lg p-3 animate-fade-in pointer-events-none"
     >
-      <div className="font-bold text-foreground text-center">{game.name}</div>
+      <div className="font-bold text-foreground text-center">{game.title}</div>
       {game.description && (
         <div className="text-sm text-foreground ">{game.description}</div>
       )}

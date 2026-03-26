@@ -14,7 +14,7 @@ export function GameCard({ game, imgWidth, imgHeight }: GameCardProps) {
   const { setHover } = useHover();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { listeners, setNodeRef, transform } = useDraggable({
     id: game.id,
   });
 
@@ -56,7 +56,7 @@ export function GameCard({ game, imgWidth, imgHeight }: GameCardProps) {
       <div className="flex items-center justify-center">
         <Image
           src={game.image}
-          alt={game.name}
+          alt={game.title}
           width={imgWidth}
           height={imgHeight}
           loading="eager"

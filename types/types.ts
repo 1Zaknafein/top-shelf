@@ -1,9 +1,10 @@
 export interface Game {
   id: number;
-  name: string;
+  title: string;
   image: string;
   tier?: string;
   description?: string;
+  order_in_tier?: number | null;
 }
 
 export enum Tier {

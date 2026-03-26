@@ -1,0 +1,20 @@
+{
+  "games": [
+    {
+      "id": 1,
+      "title": "Game 1",
+      "image": "/placeholder.webp",
+      "description": "",
+      "tier": "unassigned",
+      "order_in_tier": null
+    },
+    {
+      "id": 2,
+      "title": "Game 2",
+      "image": "/placeholder.webp",
+      "description": "",
+      "tier": "unassigned",
+      "order_in_tier": null
+    }
+  ]
+}
