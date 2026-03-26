@@ -18,14 +18,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 interface AddGameButtonProps {
-  onAddGame: (game: Game) => void;
+  onAddGame: (game: Partial<Game>) => void;
 }
 
 export function AddNewItem({ onAddGame }: AddGameButtonProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [searching, setSearching] = useState(false);
-  const [searchResult, setSearchResult] = useState<null | Game>(null);
+  const [searchResult, setSearchResult] = useState<null | Partial<Game>>(null);
 
   const handleSearch = async () => {
     if (!inputValue.trim()) return;
@@ -35,7 +35,6 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
     // TODO: Replace with actual RAWG API call
     setTimeout(() => {
       setSearchResult({
-        id: Math.floor(Math.random() * 1000000),
         title: inputValue.trim(),
         image: "/placeholder.webp",
         description: "",
@@ -130,12 +129,12 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
           {searchResult && (
             <div className="flex flex-col items-center space-y-4 p-4">
               <span className="text-lg font-semibold text-secondary">
-                {searchResult.title}
+                {searchResult.title ?? "Unknown Title"}
               </span>
               <div className="w-32 h-20 relative rounded overflow-hidden">
                 <Image
-                  src={searchResult.image}
-                  alt={searchResult.title}
+                  src={searchResult.image ?? "/placeholder.webp"}
+                  alt={searchResult.title ?? "Game image"}
                   fill
                   sizes="128px"
                   className="object-cover"

@@ -35,20 +35,19 @@ export default function MainPage({ initialGames }: Props) {
 
   const imgWidth = Math.round(rowMinHeight * cardAspectRatio);
 
-  const addGame = async (game: Game) => {
+  const addGame = async (game: Partial<Game>) => {
     const createdGame = await gameApiRequest("POST", game);
 
     setGames((prev) => [...prev, createdGame]);
   };
 
-  const getGamesByTier = (tier?: string) =>
-    games.filter((g) => g.tier === tier);
+  const getGamesByTier = (tier: string) => games.filter((g) => g.tier === tier);
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    const gameId = active.id as number;
+    const gameId = active.id as string;
     const newTier = over.id as Tier;
 
     setGames((prev) =>

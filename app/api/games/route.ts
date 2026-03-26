@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const body = await req.json();
 
   const newGame: Game = {
-    id: body.id,
+    id: crypto.randomUUID(),
     title: body.title,
     image: body.image ?? "/placeholder.webp",
     description: body.description ?? "",
