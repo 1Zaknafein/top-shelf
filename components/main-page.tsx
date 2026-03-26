@@ -1,5 +1,6 @@
 "use client";
 
+import { gameApiRequest } from "@/lib/api";
 import { Game, Tier } from "@/types/types";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { Settings } from "lucide-react";
@@ -35,15 +36,7 @@ export default function MainPage({ initialGames }: Props) {
   const imgWidth = Math.round(rowMinHeight * cardAspectRatio);
 
   const addGame = async (game: Game) => {
-    const res = await fetch("/api/games", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(game),
-    });
-
-    const createdGame = await res.json();
+    const createdGame = await gameApiRequest("POST", game);
 
     setGames((prev) => [...prev, createdGame]);
   };
@@ -64,15 +57,9 @@ export default function MainPage({ initialGames }: Props) {
       ),
     );
 
-    await fetch("/api/games", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: gameId,
-        tier: newTier,
-      }),
+    await gameApiRequest("PUT", {
+      id: gameId,
+      tier: newTier,
     });
   };
 
