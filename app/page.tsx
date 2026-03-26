@@ -1,8 +1,10 @@
 "use client";
 
 import { AddNewItem } from "@/components/add-new-item";
+import { HoverPopup } from "@/components/hover-popup";
 import { SettingsMenu } from "@/components/settings-menu";
 import { Button } from "@/components/ui/button";
+import { HoverProvider } from "@/components/use-hover";
 import { Settings } from "lucide-react";
 import { useState } from "react";
 import { TierCard } from "../components/tier-card";
@@ -27,7 +29,7 @@ export default function Page() {
   const unassignedGames = games.filter((g) => !g.tier);
 
   return (
-    <>
+    <HoverProvider>
       <div className="mx:0 md:mx-50">
         <div className="flex flex-col gap-2 items-center justify-center text-center">
           <h1 className="text-4xl font-bold pt-6">Top Shelf</h1>
@@ -64,6 +66,9 @@ export default function Page() {
             </div>
           </div>
         ))}
+
+        <HoverPopup />
+
         <span className="flex pt-10 text-2xl font-bold">Unassigned games</span>
         <hr className="w-full border-t-2 border-border my-4 opacity-20" />
 
@@ -94,6 +99,6 @@ export default function Page() {
           setRowMinHeight={setRowMinHeight}
         />
       )}
-    </>
+    </HoverProvider>
   );
 }
