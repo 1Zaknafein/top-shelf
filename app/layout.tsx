@@ -25,7 +25,7 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "antialiased", "font-sans", carterOne.variable)}
     >
-      <body className="min-h-full flex flex-col bg-image">
+      <body className=" bg-image">
         <main>{children} </main>
         <Toaster />
       </body>

@@ -11,7 +11,7 @@ export function TierRow({ games, imgWidth, imgHeight }: TierRowProps) {
   return (
     <div
       className={"tier-row glass-bg rounded-lg"}
-      style={{ minHeight: `${imgHeight}px` }}
+      style={{ minHeight: `${80}px` }}
     >
       <div className="flex flex-wrap">
         {games.map((game) => (
