@@ -1,4 +1,4 @@
-import { Game } from "../types/types";
+import { Game, Tier } from "../types/types";
 
 // Set how many games you want per tier/undefined
 const S_COUNT = 3;
@@ -12,32 +12,36 @@ const baseGames: Omit<Game, "id">[] = [
     name: "Title",
     image:
       "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-    tier: "",
+    tier: Tier.Unassigned,
   },
 ];
 
-function generateGames(count: number, tier?: string, startId = 1): Game[] {
+function generateGames(count: number, tier: Tier, startId = 1): Game[] {
   return Array.from({ length: count }).map((_, i) => {
     const base =
       baseGames[(i + (tier ? tier.charCodeAt(0) : 0)) % baseGames.length];
     return {
       ...base,
       id: startId + i,
-      tier: tier ?? undefined,
+      tier: tier ?? Tier.Unassigned,
     };
   });
 }
 
 let currentId = 1;
-const sGames = generateGames(S_COUNT, "S", currentId);
+const sGames = generateGames(S_COUNT, Tier.S, currentId);
 currentId += S_COUNT;
-const aGames = generateGames(A_COUNT, "A", currentId);
+const aGames = generateGames(A_COUNT, Tier.A, currentId);
 currentId += A_COUNT;
-const bGames = generateGames(B_COUNT, "B", currentId);
+const bGames = generateGames(B_COUNT, Tier.B, currentId);
 currentId += B_COUNT;
-const cGames = generateGames(C_COUNT, "C", currentId);
+const cGames = generateGames(C_COUNT, Tier.C, currentId);
 currentId += C_COUNT;
-const undefinedGames = generateGames(UNDEFINED_COUNT, undefined, currentId);
+const undefinedGames = generateGames(
+  UNDEFINED_COUNT,
+  Tier.Unassigned,
+  currentId,
+);
 
 export const mockGameData: Game[] = [
   ...sGames,

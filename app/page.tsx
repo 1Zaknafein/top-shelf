@@ -39,14 +39,16 @@ export default function Page() {
     if (!over) return;
 
     const gameId = active.id as number;
-    const newTier = over.id as string;
+    const newTier = over.id as Tier;
 
     setGames((prev) =>
-      prev.map((g) => (g.id === gameId ? { ...g, tier: newTier } : g)),
+      prev.map((game) =>
+        game.id === gameId ? { ...game, tier: newTier } : game,
+      ),
     );
   };
 
-  const unassignedGames = games.filter((g) => !g.tier);
+  const unassignedGames = games.filter((g) => g.tier === Tier.Unassigned);
 
   return (
     <HoverProvider>
@@ -88,39 +90,43 @@ export default function Page() {
               </div>
             </div>
           ))}
-        </DndContext>
 
-        <HoverPopup />
+          <HoverPopup />
 
-        <span className="flex pt-10 text-2xl font-bold">Unassigned games</span>
-        <hr className="w-full border-t-2 border-border my-4 opacity-20" />
+          <span className="flex pt-10 text-2xl font-bold">
+            Unassigned games
+          </span>
+          <hr className="w-full border-t-2 border-border my-4 opacity-20" />
 
-        <div key="unassigned" className={`gap-2 my-10 flex items-stretch `}>
-          <AddNewItem
-            onAddGame={(name) =>
-              setGames([
-                ...games,
-                {
-                  id: 123,
-                  name,
-                  image: "/placeholder.webp",
-                  tier: Tier.Unassigned,
-                },
-              ])
-            }
-          />
-
-          <div className="flex-1 tier-unassigned">
-            <TierRow
-              games={unassignedGames}
-              tier={Tier.Unassigned}
-              imgWidth={imgWidth}
-              imgHeight={rowMinHeight}
+          <div
+            key={Tier.Unassigned}
+            className={`gap-2 my-10 flex items-stretch `}
+          >
+            <AddNewItem
+              onAddGame={(name) =>
+                setGames([
+                  ...games,
+                  {
+                    id: 123,
+                    name,
+                    image: "/placeholder.webp",
+                    tier: Tier.Unassigned,
+                  },
+                ])
+              }
             />
-          </div>
-        </div>
-      </div>
 
+            <div className="flex-1 tier-unassigned">
+              <TierRow
+                games={unassignedGames}
+                tier={Tier.Unassigned}
+                imgWidth={imgWidth}
+                imgHeight={rowMinHeight}
+              />
+            </div>
+          </div>
+        </DndContext>
+      </div>
       {showSettings && (
         <SettingsMenu
           onClose={() => setShowSettings(false)}
