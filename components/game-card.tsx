@@ -1,8 +1,7 @@
-"use client";
-
+import { Game } from "@/types/types";
+import { useDraggable } from "@dnd-kit/core";
 import Image from "next/image";
 import { useRef } from "react";
-import { Game } from "../types/types";
 import { useHover } from "./use-hover";
 
 interface GameCardProps {
@@ -14,6 +13,14 @@ interface GameCardProps {
 export function GameCard({ game, imgWidth, imgHeight }: GameCardProps) {
   const { setHover } = useHover();
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: game.id,
+  });
+
+  const style = transform
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
+    : undefined;
 
   const glowStyle = game.tier
     ? {
@@ -34,9 +41,15 @@ export function GameCard({ game, imgWidth, imgHeight }: GameCardProps) {
 
   return (
     <div
-      ref={cardRef}
+      ref={(node) => {
+        setNodeRef(node); // drag&drop
+        cardRef.current = node; // hover
+      }}
+      style={{ ...style, ...glowStyle }}
+      {...listeners}
+      role="button"
+      tabIndex={0}
       className="game-card rounded-md overflow-hidden cursor-pointer"
-      style={glowStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

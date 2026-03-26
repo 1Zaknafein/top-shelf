@@ -5,14 +5,23 @@ import { HoverPopup } from "@/components/hover-popup";
 import { SettingsMenu } from "@/components/settings-menu";
 import { Button } from "@/components/ui/button";
 import { HoverProvider } from "@/components/use-hover";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { Settings } from "lucide-react";
 import { useState } from "react";
 import { TierCard } from "../components/tier-card";
 import { TierRow } from "../components/tier-row";
 import { mockGameData } from "../lib/mockGames";
-import { Game } from "../types/types";
+import { Game, Tier } from "../types/types";
 
-const tiers = ["S", "A", "B", "C", "D", "E", "F"];
+export const tiers: Tier[] = [
+  Tier.S,
+  Tier.A,
+  Tier.B,
+  Tier.C,
+  Tier.D,
+  Tier.E,
+  Tier.F,
+];
 const cardAspectRatio = 16 / 9;
 
 export default function Page() {
@@ -24,6 +33,18 @@ export default function Page() {
 
   const getGamesByTier = (tier?: string) =>
     games.filter((g) => g.tier === tier);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const gameId = active.id as number;
+    const newTier = over.id as string;
+
+    setGames((prev) =>
+      prev.map((g) => (g.id === gameId ? { ...g, tier: newTier } : g)),
+    );
+  };
 
   const unassignedGames = games.filter((g) => !g.tier);
 
@@ -47,24 +68,27 @@ export default function Page() {
           </Button>
         </div>
 
-        {tiers.map((tier) => (
-          <div
-            key={tier}
-            className={`gap-2 my-4 flex items-stretch tier-${tier}`}
-          >
-            <div>
-              <TierCard tier={tier} className="h-full" />
-            </div>
+        <DndContext onDragEnd={handleDragEnd}>
+          {tiers.map((tier) => (
+            <div
+              key={tier}
+              className={`gap-2 my-4 flex items-stretch tier-${tier}`}
+            >
+              <div>
+                <TierCard tier={tier} className="h-full" />
+              </div>
 
-            <div className="flex-1">
-              <TierRow
-                games={getGamesByTier(tier)}
-                imgWidth={imgWidth}
-                imgHeight={rowMinHeight}
-              />
+              <div className="flex-1">
+                <TierRow
+                  games={getGamesByTier(tier)}
+                  tier={tier as Tier}
+                  imgWidth={imgWidth}
+                  imgHeight={rowMinHeight}
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </DndContext>
 
         <HoverPopup />
 
@@ -76,7 +100,12 @@ export default function Page() {
             onAddGame={(name) =>
               setGames([
                 ...games,
-                { id: Date.now(), name, image: "/placeholder.webp", tier: "" },
+                {
+                  id: 123,
+                  name,
+                  image: "/placeholder.webp",
+                  tier: Tier.Unassigned,
+                },
               ])
             }
           />
@@ -84,6 +113,7 @@ export default function Page() {
           <div className="flex-1 tier-unassigned">
             <TierRow
               games={unassignedGames}
+              tier={Tier.Unassigned}
               imgWidth={imgWidth}
               imgHeight={rowMinHeight}
             />

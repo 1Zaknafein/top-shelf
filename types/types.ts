@@ -5,3 +5,14 @@ export interface Game {
   tier?: string;
   description?: string;
 }
+
+export enum Tier {
+  S = "S",
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+  E = "E",
+  F = "F",
+  Unassigned = "unassigned",
+}
