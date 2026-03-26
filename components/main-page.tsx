@@ -34,6 +34,20 @@ export default function MainPage({ initialGames }: Props) {
 
   const imgWidth = Math.round(rowMinHeight * cardAspectRatio);
 
+  const addGame = async (game: Game) => {
+    const res = await fetch("/api/games", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(game),
+    });
+
+    const createdGame = await res.json();
+
+    setGames((prev) => [...prev, createdGame]);
+  };
+
   const getGamesByTier = (tier?: string) =>
     games.filter((g) => g.tier === tier);
 
@@ -116,21 +130,9 @@ export default function MainPage({ initialGames }: Props) {
             key={Tier.Unassigned}
             className={`gap-2 my-10 flex items-stretch `}
           >
-            <AddNewItem
-              onAddGame={(name) =>
-                setGames([
-                  ...games,
-                  {
-                    id: 123,
-                    title: name,
-                    image: "/placeholder.webp",
-                    tier: Tier.Unassigned,
-                  },
-                ])
-              }
-            />
+            <AddNewItem onAddGame={addGame} />
 
-            <div className="flex-1 tier-unassigned">
+            <div className="flex-1 tier-unassigned mb-4">
               <TierRow
                 games={unassignedGames}
                 tier={Tier.Unassigned}

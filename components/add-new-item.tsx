@@ -11,23 +11,21 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Game } from "@/types/types";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface AddGameButtonProps {
-  onAddGame: (name: string) => void;
+  onAddGame: (game: Game) => void;
 }
 
 export function AddNewItem({ onAddGame }: AddGameButtonProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [searching, setSearching] = useState(false);
-  const [searchResult, setSearchResult] = useState<null | {
-    title: string;
-    image: string;
-  }>(null);
+  const [searchResult, setSearchResult] = useState<null | Game>(null);
 
   const handleSearch = async () => {
     if (!inputValue.trim()) return;
@@ -37,8 +35,12 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
     // TODO: Replace with actual RAWG API call
     setTimeout(() => {
       setSearchResult({
+        id: Math.floor(Math.random() * 1000000),
         title: inputValue.trim(),
         image: "/placeholder.webp",
+        description: "",
+        tier: "unassigned",
+        order_in_tier: null,
       });
       setSearching(false);
     }, 1000);
@@ -46,7 +48,8 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
 
   const handleAdd = () => {
     if (searchResult) {
-      onAddGame(searchResult.title);
+      onAddGame(searchResult);
+
       setSearchResult(null);
       setSearching(false);
       setInputValue("");
