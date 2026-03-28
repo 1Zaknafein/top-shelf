@@ -14,6 +14,21 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
+  const title = body.title?.toLowerCase().trim();
+
+  if (!title) {
+    return NextResponse.json({ error: "Missing title" }, { status: 400 });
+  }
+
+  // Check for duplicates
+  const exists = db.data!.games.some(
+    (g) => g.title.toLowerCase().trim() === title,
+  );
+
+  if (exists) {
+    return NextResponse.json({ error: "Game already exists" }, { status: 409 });
+  }
+
   const newGame: Game = {
     id: crypto.randomUUID(),
     title: body.title,

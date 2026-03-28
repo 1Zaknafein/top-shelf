@@ -20,9 +20,10 @@ import { toast } from "sonner";
 
 interface AddGameButtonProps {
   onAddGame: (game: Partial<Game>) => void;
+  allGames: Game[];
 }
 
-export function AddNewItem({ onAddGame }: AddGameButtonProps) {
+export function AddNewItem({ onAddGame, allGames }: AddGameButtonProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [searching, setSearching] = useState(false);
@@ -57,19 +58,39 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
   };
 
   const handleAdd = () => {
-    if (searchResult) {
-      onAddGame(searchResult);
+    if (searchResult == null) {
+      throw new Error("No search result to add!");
+    }
 
-      setSearchResult(null);
-      setSearching(false);
-      setInputValue("");
+    const exists = allGames.some(
+      (g) =>
+        g.title.trim().toLowerCase() ===
+        (searchResult.title ?? "").trim().toLowerCase(),
+    );
 
-      // TODO Check if game was actually added. If it already exists, show an error toast instead.
-      toast("Game has been added!", {
+    setSearching(false);
+    setInputValue("");
+
+    if (exists) {
+      toast("Game already exists!", {
         position: "bottom-right",
         duration: 2000,
+        style: { background: "#f87171", color: "#fff" },
       });
+
+      setSearchResult(null);
+
+      return;
     }
+
+    onAddGame(searchResult);
+
+    toast("Game has been added!", {
+      position: "bottom-right",
+      duration: 2000,
+    });
+
+    setSearchResult(null);
   };
 
   const handleClose = () => {

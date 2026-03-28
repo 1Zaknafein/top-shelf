@@ -104,7 +104,10 @@ export default function MainPage({ initialGames }: Props) {
               key={Tier.Unassigned}
               className={`gap-4 my-10 pb-10 flex items-stretch `}
             >
-              <AddNewItem onAddGame={addGame} />
+              <AddNewItem
+                onAddGame={addGame}
+                allGames={Object.values(tierRowData).flat()}
+              />
 
               <div className="flex-1 tier-unassigned mb-4">
                 <TierRow id={Tier.Unassigned}>
