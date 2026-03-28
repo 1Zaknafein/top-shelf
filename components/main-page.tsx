@@ -22,8 +22,8 @@ interface Props {
 }
 
 export default function MainPage({ initialGames }: Props) {
-  const [tierRows, setTierRows] = useState<Record<Tier, Game[]>>(() => {
-    return initialGames.reduce(
+  const [tierRowData, setTierRowData] = useState<Record<Tier, Game[]>>(() => {
+    const grouped = initialGames.reduce(
       (acc, game) => {
         const tier = game.tier || Tier.Unassigned;
         if (!acc[tier]) {
@@ -43,21 +43,31 @@ export default function MainPage({ initialGames }: Props) {
         [Tier.Unassigned]: [],
       } as Record<Tier, Game[]>,
     );
+
+    // Sort each tier by order_in_tier
+    Object.keys(grouped).forEach((tier) => {
+      grouped[tier as Tier].sort((a, b) => {
+        const aOrder = a.order_in_tier ?? Infinity;
+        const bOrder = b.order_in_tier ?? Infinity;
+        return aOrder - bOrder;
+      });
+    });
+
+    return grouped;
   });
 
   const addGame = async (game: Partial<Game>) => {
     const createdGame = await gameApiRequest("POST", game);
 
-    setTierRows((prev) => ({
+    setTierRowData((prev) => ({
       ...prev,
       [Tier.Unassigned]: [...prev[Tier.Unassigned], createdGame],
     }));
   };
 
-  const [tierRowOrder, setTierRowOrder] = useState(
-    () =>
-      Object.keys(tierRows).filter((key) => key !== Tier.Unassigned) as Tier[],
-  );
+  const tierRowOrder = Object.keys(tierRowData).filter(
+    (key) => key !== Tier.Unassigned,
+  ) as Tier[];
 
   const [showSettings, setShowSettings] = useState(false);
   const [rowMinHeight, setRowMinHeight] = useState(64);
@@ -84,15 +94,10 @@ export default function MainPage({ initialGames }: Props) {
           </Button>
         </div>
         <HoverProvider>
-          <TierRowsProvider
-            tierRows={tierRows}
-            setTierRows={setTierRows}
-            rowOrder={tierRowOrder}
-            setRowOrder={setTierRowOrder}
-          >
+          <TierRowsProvider tierRows={tierRowData} setTierRows={setTierRowData}>
             <TierRowsList
               rowOrder={tierRowOrder}
-              tierRows={tierRows}
+              tierRows={tierRowData}
               rowMinHeight={rowMinHeight}
               imgWidth={imgWidth}
             />
@@ -115,7 +120,7 @@ export default function MainPage({ initialGames }: Props) {
                   id={Tier.Unassigned}
                   index={tierRowOrder.indexOf(Tier.Unassigned)}
                 >
-                  {tierRows[Tier.Unassigned].map((game, index) => (
+                  {tierRowData[Tier.Unassigned].map((game, index) => (
                     <GameCard
                       key={game.id}
                       game={game}

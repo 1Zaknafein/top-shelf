@@ -7,16 +7,12 @@ import { useRef } from "react";
 interface TierRowsProviderProps {
   tierRows: Record<Tier, Game[]>;
   setTierRows: React.Dispatch<React.SetStateAction<Record<Tier, Game[]>>>;
-  rowOrder: Tier[];
-  setRowOrder: React.Dispatch<React.SetStateAction<Tier[]>>;
   children: React.ReactNode;
 }
 
 export function TierRowsProvider({
   tierRows,
   setTierRows,
-  rowOrder,
-  setRowOrder,
   children,
 }: TierRowsProviderProps) {
   const previousItems = useRef(tierRows);
@@ -41,84 +37,95 @@ export function TierRowsProvider({
             lastTargetTier.current = target.data.tier;
           }
         }
+
         setTierRows((items) => move(items, event));
       }}
       onDragEnd={(event) => {
         const { source, target } = event.operation;
 
-        if (event.canceled) {
-          if (source?.type === "item") {
-            setTierRows(previousItems.current);
-          }
-          lastTargetTier.current = null;
-          return;
-        }
-
         // Handles case when dropped on a row (not on/near an item).
         if (source?.type === "item" && target?.type === "row") {
           setTierRows((prev) => {
-            const movedGame = Object.values(tierRows)
+            const movedGame = Object.values(prev)
               .flat()
               .find((g) => g.id === source.id);
 
             if (!movedGame) return prev;
 
+            const targetTier = target.id as Tier;
+
             const newRows = { ...prev };
 
+            // remove from all rows
             for (const tier in newRows) {
               newRows[tier as Tier] = newRows[tier as Tier].filter(
                 (g) => g.id !== movedGame.id,
               );
             }
 
-            const updatedGame = { ...movedGame, tier: target.id as Tier };
+            // add to target row
+            const updatedTargetRow = [
+              ...newRows[targetTier],
+              { ...movedGame, tier: targetTier },
+            ].map((g, i) => ({
+              ...g,
+              order_in_tier: i,
+            }));
 
-            newRows[target.id as Tier] = [
-              ...newRows[target.id as Tier],
-              updatedGame,
-            ];
+            newRows[targetTier] = updatedTargetRow;
 
-            if (movedGame && movedGame.tier !== target.id) {
+            // update all items in target row
+            updatedTargetRow.forEach((g) => {
               gameApiRequest("PUT", {
-                id: movedGame.id,
-                tier: target.id as Tier,
+                id: g.id,
+                tier: g.tier,
+                order_in_tier: g.order_in_tier,
               });
-            }
+            });
+
             return newRows;
           });
         }
 
         // Handles case when dropped on/near an item, and we need to check if tier changed.
-        if (
-          source?.type === "item" &&
-          target?.type === "item" &&
-          lastTargetTier.current
-        ) {
+        if (source?.type === "item" && target?.type === "item") {
           setTierRows((prev) => {
-            // Ensure ordering is updated
             const next = move(prev, event);
 
-            const targetTier = lastTargetTier.current as Tier;
+            const targetTier =
+              lastTargetTier.current ?? (source.data.tier as Tier);
 
-            // Update target tier manually
-            const newRows = { ...next };
+            const targetRow = next[targetTier];
 
-            for (const tier in newRows) {
-              newRows[tier as Tier] = newRows[tier as Tier].map((g) =>
-                g.id === source.id ? { ...g, tier: targetTier } : g,
-              );
-            }
+            // reindex entire target row
+            const updatedRow = targetRow.map((g, i) => ({
+              ...g,
+              tier: targetTier,
+              order_in_tier: i,
+            }));
 
-            const originalItem = Object.values(prev)
-              .flat()
-              .find((g) => g.id === source.id);
+            const newRows = {
+              ...next,
+              [targetTier]: updatedRow,
+            };
 
-            if (originalItem && originalItem.tier !== targetTier) {
-              gameApiRequest("PUT", {
-                id: source.id as string,
-                tier: targetTier,
-              });
-            }
+            updatedRow.forEach((g) => {
+              const original = Object.values(prev)
+                .flat()
+                .find((o) => o.id === g.id);
+
+              if (
+                original &&
+                (original.tier !== g.tier ||
+                  original.order_in_tier !== g.order_in_tier)
+              ) {
+                gameApiRequest("PUT", {
+                  id: g.id,
+                  tier: g.tier,
+                  order_in_tier: g.order_in_tier,
+                });
+              }
+            });
 
             return newRows;
           });
