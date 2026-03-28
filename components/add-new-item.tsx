@@ -11,6 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { mapRawgDataToGame, searchGames } from "@/lib/rawg";
 import { Game, Tier } from "@/types/types";
 import { Plus } from "lucide-react";
 import Image from "next/image";
@@ -29,20 +30,30 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
 
   const handleSearch = async () => {
     if (!inputValue.trim()) return;
+
     setSearching(true);
     setSearchResult(null);
 
-    // TODO: Replace with actual RAWG API call
-    setTimeout(() => {
+    try {
+      const results = await searchGames(inputValue.trim());
+
+      if (!results.length) {
+        setSearchResult(null);
+        return;
+      }
+
+      const game = mapRawgDataToGame(results[0]);
+
       setSearchResult({
-        title: inputValue.trim(),
-        image: "/placeholder.webp",
-        description: "",
+        ...game,
         tier: Tier.Unassigned,
         order_in_tier: null,
       });
+    } catch (err) {
+      console.error(err);
+    } finally {
       setSearching(false);
-    }, 1000);
+    }
   };
 
   const handleAdd = () => {
