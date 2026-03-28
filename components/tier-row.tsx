@@ -4,11 +4,10 @@ import { useDroppable } from "@dnd-kit/react";
 
 interface TierRowProps {
   id: string;
-  index: number;
   children: React.ReactNode;
 }
 
-export function TierRow({ children, id, index }: TierRowProps) {
+export function TierRow({ children, id }: TierRowProps) {
   const { isDropTarget, ref } = useDroppable({
     id: id,
     type: "row",

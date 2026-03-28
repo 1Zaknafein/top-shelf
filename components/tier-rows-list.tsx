@@ -18,13 +18,13 @@ export function TierRowsList({
 }: TierRowsListProps) {
   return (
     <div>
-      {rowOrder.map((row, rowIndex) => (
+      {rowOrder.map((row) => (
         <div key={row} className={`gap-2 my-4 flex items-stretch tier-${row}`}>
           <div>
             <TierCard tier={row} className="h-full" />
           </div>
           <div className="flex-1">
-            <TierRow key={row} id={row} index={rowIndex}>
+            <TierRow key={row} id={row}>
               {tierRows[row as Tier].map((game, index) => (
                 <GameCard
                   key={game.id}

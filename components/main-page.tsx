@@ -116,10 +116,7 @@ export default function MainPage({ initialGames }: Props) {
               <AddNewItem onAddGame={addGame} />
 
               <div className="flex-1 tier-unassigned mb-4">
-                <TierRow
-                  id={Tier.Unassigned}
-                  index={tierRowOrder.indexOf(Tier.Unassigned)}
-                >
+                <TierRow id={Tier.Unassigned}>
                   {tierRowData[Tier.Unassigned].map((game, index) => (
                     <GameCard
                       key={game.id}
