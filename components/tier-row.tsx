@@ -1,37 +1,29 @@
 "use client";
 
-import { Game, Tier } from "@/types/types";
-import { useDroppable } from "@dnd-kit/core";
-import { GameCard } from "./game-card";
+import { useDroppable } from "@dnd-kit/react";
 
 interface TierRowProps {
-  games: Game[];
-  imgWidth: number;
-  imgHeight: number;
-  tier: Tier;
+  id: string;
+  index: number;
+  children: React.ReactNode;
 }
 
-export function TierRow({ games, tier, imgWidth, imgHeight }: TierRowProps) {
-  const { setNodeRef, isOver } = useDroppable({ id: tier });
+export function TierRow({ children, id, index }: TierRowProps) {
+  const { isDropTarget, ref } = useDroppable({
+    id: id,
+    type: "row",
+    accept: "item",
+    data: { tier: id },
+  });
+
+  const dropStyle = isDropTarget ? "drop-target" : undefined;
 
   return (
     <div
-      ref={setNodeRef}
-      className={
-        "tier-row glass-bg rounded-lg" + (isOver ? " ring-2 ring-primary" : "")
-      }
-      style={{ minHeight: `${80}px` }}
+      className={`flex flex-wrap gap-2 glass-bg tier-row tier-${id} min-height ${dropStyle}`}
+      ref={ref}
     >
-      <div className="flex flex-wrap">
-        {games.map((game) => (
-          <div
-            key={game.id}
-            className="game-wrapper flex-none inline-block p-1.5"
-          >
-            <GameCard game={game} imgWidth={imgWidth} imgHeight={imgHeight} />
-          </div>
-        ))}
-      </div>
+      {children}
     </div>
   );
 }

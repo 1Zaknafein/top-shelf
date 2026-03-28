@@ -1,26 +1,32 @@
-import { Game } from "@/types/types";
-import { useDraggable } from "@dnd-kit/core";
+import { Game, Tier } from "@/types/types";
+import { useSortable } from "@dnd-kit/react/sortable";
 import Image from "next/image";
 import { useRef } from "react";
 import { useHover } from "./use-hover";
 
+import { pointerIntersection } from "@dnd-kit/collision";
+
 interface GameCardProps {
   game: Game;
+  index: number;
   imgWidth: number;
   imgHeight: number;
+  row: Tier;
 }
 
-export function GameCard({ game, imgWidth, imgHeight }: GameCardProps) {
+export function GameCard({ game, index, imgWidth, imgHeight }: GameCardProps) {
   const { setHover } = useHover();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const { listeners, setNodeRef, transform } = useDraggable({
+  const { ref, isDragging } = useSortable({
     id: game.id,
+    index,
+    type: "item",
+    accept: ["row", "item"],
+    group: "row",
+    data: { tier: game.tier },
+    collisionDetector: pointerIntersection,
   });
-
-  const style = transform
-    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
-    : undefined;
 
   const glowStyle = game.tier
     ? {
@@ -30,7 +36,7 @@ export function GameCard({ game, imgWidth, imgHeight }: GameCardProps) {
     : undefined;
 
   const handleMouseEnter = () => {
-    if (cardRef.current) {
+    if (!isDragging && cardRef.current) {
       const rect = cardRef.current.getBoundingClientRect();
       setHover({ game, rect });
     }
@@ -40,28 +46,28 @@ export function GameCard({ game, imgWidth, imgHeight }: GameCardProps) {
   };
 
   return (
-    <div
-      ref={(node) => {
-        setNodeRef(node); // drag&drop
-        cardRef.current = node; // hover
-      }}
-      style={{ ...style, ...glowStyle }}
-      {...listeners}
-      role="button"
-      tabIndex={0}
-      className="game-card rounded-md overflow-hidden cursor-pointer"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className="flex items-center justify-center">
-        <Image
-          src={game.image}
-          alt={game.title}
-          width={imgWidth}
-          height={imgHeight}
-          loading="eager"
-          className="object-cover"
-        />
+    <div ref={ref} data-dragging={isDragging}>
+      <div
+        ref={(node) => {
+          cardRef.current = node;
+        }}
+        style={glowStyle}
+        role="button"
+        tabIndex={0}
+        className="game-card rounded-md overflow-hidden cursor-pointer"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="flex items-center justify-center">
+          <Image
+            src={game.image}
+            alt={game.title}
+            width={imgWidth}
+            height={imgHeight}
+            loading="eager"
+            className="object-cover"
+          />
+        </div>
       </div>
     </div>
   );

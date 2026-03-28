@@ -11,7 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Game } from "@/types/types";
+import { Game, Tier } from "@/types/types";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -38,7 +38,7 @@ export function AddNewItem({ onAddGame }: AddGameButtonProps) {
         title: inputValue.trim(),
         image: "/placeholder.webp",
         description: "",
-        tier: "unassigned",
+        tier: Tier.Unassigned,
         order_in_tier: null,
       });
       setSearching(false);

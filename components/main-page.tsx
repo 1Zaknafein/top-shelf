@@ -2,26 +2,19 @@
 
 import { gameApiRequest } from "@/lib/api";
 import { Game, Tier } from "@/types/types";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { Settings } from "lucide-react";
 import { useState } from "react";
 import { AddNewItem } from "./add-new-item";
+import { GameCard } from "./game-card";
 import { HoverPopup } from "./hover-popup";
 import { SettingsMenu } from "./settings-menu";
-import { TierCard } from "./tier-card";
+import { TierRowsList } from "./tier-rows-list";
+import { TierRowsProvider } from "./tier-rows-provider";
+
 import { TierRow } from "./tier-row";
 import { Button } from "./ui/button";
 import { HoverProvider } from "./use-hover";
 
-export const tiers: Tier[] = [
-  Tier.S,
-  Tier.A,
-  Tier.B,
-  Tier.C,
-  Tier.D,
-  Tier.E,
-  Tier.F,
-];
 const cardAspectRatio = 16 / 9;
 
 interface Props {
@@ -29,43 +22,50 @@ interface Props {
 }
 
 export default function MainPage({ initialGames }: Props) {
-  const [games, setGames] = useState<Game[]>(initialGames);
+  const [tierRows, setTierRows] = useState<Record<Tier, Game[]>>(() => {
+    return initialGames.reduce(
+      (acc, game) => {
+        const tier = game.tier || Tier.Unassigned;
+        if (!acc[tier]) {
+          acc[tier] = [];
+        }
+        acc[tier].push(game);
+        return acc;
+      },
+      {
+        [Tier.S]: [],
+        [Tier.A]: [],
+        [Tier.B]: [],
+        [Tier.C]: [],
+        [Tier.D]: [],
+        [Tier.E]: [],
+        [Tier.F]: [],
+        [Tier.Unassigned]: [],
+      } as Record<Tier, Game[]>,
+    );
+  });
+
+  const addGame = async (game: Partial<Game>) => {
+    const createdGame = await gameApiRequest("POST", game);
+
+    setTierRows((prev) => ({
+      ...prev,
+      [Tier.Unassigned]: [...prev[Tier.Unassigned], createdGame],
+    }));
+  };
+
+  const [tierRowOrder, setTierRowOrder] = useState(
+    () =>
+      Object.keys(tierRows).filter((key) => key !== Tier.Unassigned) as Tier[],
+  );
+
   const [showSettings, setShowSettings] = useState(false);
   const [rowMinHeight, setRowMinHeight] = useState(64);
 
   const imgWidth = Math.round(rowMinHeight * cardAspectRatio);
 
-  const addGame = async (game: Partial<Game>) => {
-    const createdGame = await gameApiRequest("POST", game);
-
-    setGames((prev) => [...prev, createdGame]);
-  };
-
-  const getGamesByTier = (tier: string) => games.filter((g) => g.tier === tier);
-
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const gameId = active.id as string;
-    const newTier = over.id as Tier;
-
-    setGames((prev) =>
-      prev.map((game) =>
-        game.id === gameId ? { ...game, tier: newTier } : game,
-      ),
-    );
-
-    await gameApiRequest("PUT", {
-      id: gameId,
-      tier: newTier,
-    });
-  };
-
-  const unassignedGames = games.filter((g) => g.tier === Tier.Unassigned);
-
   return (
-    <HoverProvider>
+    <>
       <div className="mx:0 md:mx-50">
         <div className="flex flex-col gap-2 items-center justify-center text-center">
           <h1 className="text-4xl font-bold pt-6">Top Shelf</h1>
@@ -83,51 +83,53 @@ export default function MainPage({ initialGames }: Props) {
             <Settings style={{ width: "30px", height: "30px" }} />
           </Button>
         </div>
-
-        <DndContext onDragEnd={handleDragEnd}>
-          {tiers.map((tier) => (
-            <div
-              key={tier}
-              className={`gap-2 my-4 flex items-stretch tier-${tier}`}
-            >
-              <div>
-                <TierCard tier={tier} className="h-full" />
-              </div>
-
-              <div className="flex-1">
-                <TierRow
-                  games={getGamesByTier(tier)}
-                  tier={tier as Tier}
-                  imgWidth={imgWidth}
-                  imgHeight={rowMinHeight}
-                />
-              </div>
-            </div>
-          ))}
-
-          <HoverPopup />
-
-          <span className="flex pt-10 text-2xl font-bold">
-            Unassigned games
-          </span>
-          <hr className="w-full border-t-2 border-border my-4 opacity-20" />
-
-          <div
-            key={Tier.Unassigned}
-            className={`gap-2 my-10 flex items-stretch `}
+        <HoverProvider>
+          <TierRowsProvider
+            tierRows={tierRows}
+            setTierRows={setTierRows}
+            rowOrder={tierRowOrder}
+            setRowOrder={setTierRowOrder}
           >
-            <AddNewItem onAddGame={addGame} />
+            <TierRowsList
+              rowOrder={tierRowOrder}
+              tierRows={tierRows}
+              rowMinHeight={rowMinHeight}
+              imgWidth={imgWidth}
+            />
 
-            <div className="flex-1 tier-unassigned mb-4">
-              <TierRow
-                games={unassignedGames}
-                tier={Tier.Unassigned}
-                imgWidth={imgWidth}
-                imgHeight={rowMinHeight}
-              />
+            <HoverPopup />
+
+            <span className="flex pt-10 text-2xl font-bold">
+              Unassigned games
+            </span>
+            <hr className="w-full border-t-2 border-border my-4 opacity-20" />
+
+            <div
+              key={Tier.Unassigned}
+              className={`gap-2 my-10 flex items-stretch `}
+            >
+              <AddNewItem onAddGame={addGame} />
+
+              <div className="flex-1 tier-unassigned mb-4">
+                <TierRow
+                  id={Tier.Unassigned}
+                  index={tierRowOrder.indexOf(Tier.Unassigned)}
+                >
+                  {tierRows[Tier.Unassigned].map((game, index) => (
+                    <GameCard
+                      key={game.id}
+                      game={game}
+                      index={index}
+                      imgHeight={rowMinHeight}
+                      imgWidth={imgWidth}
+                      row={Tier.Unassigned}
+                    />
+                  ))}
+                </TierRow>
+              </div>
             </div>
-          </div>
-        </DndContext>
+          </TierRowsProvider>
+        </HoverProvider>
       </div>
       {showSettings && (
         <SettingsMenu
@@ -136,6 +138,6 @@ export default function MainPage({ initialGames }: Props) {
           setRowMinHeight={setRowMinHeight}
         />
       )}
-    </HoverProvider>
+    </>
   );
 }

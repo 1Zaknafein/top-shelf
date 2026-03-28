@@ -2,7 +2,7 @@ export interface Game {
   id: string;
   title: string;
   image: string;
-  tier?: string;
+  tier: Tier;
   description?: string;
   order_in_tier?: number | null;
 }

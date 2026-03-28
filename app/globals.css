@@ -139,6 +139,13 @@
   -webkit-backdrop-filter: blur(12px) saturate(160%);
 }
 
+.tier-row {
+  min-height: 64px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 0.5rem;
+  transition: background 0.3s;
+}
+
 .tier-S {
   --tier-color: #ffd700;
   --tier-color-border: #ffd70090;
@@ -166,12 +173,12 @@
 }
 .tier-E {
   --tier-color: #8737ff;
-  --tier-color-border: #8737ff25;
+  --tier-color-border: #8737ff20;
   --tier-color-glow: #8737ff59;
 }
 .tier-F {
   --tier-color: rgb(8, 8, 8);
-  --tier-color-border: #2b2b2b20;
+  --tier-color-border: #2b2b2b00;
   --tier-color-glow: rgba(43, 43, 43, 0);
 }
 .tier-unassigned {
@@ -234,4 +241,9 @@ body::before {
     transparent
   );
   opacity: 0.7;
+}
+
+.drop-target {
+  border: 2px dashed var(--primary, #000000);
+  background-color: var(--primary, #000000) 70;
 }
