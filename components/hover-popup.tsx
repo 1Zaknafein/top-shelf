@@ -22,7 +22,7 @@ export function HoverPopup() {
         maxWidth: game.description ? 300 : 150,
         fontFamily: "system-ui, Arial, Helvetica, sans-serif",
       }}
-      className="flex flex-col items-center bg-tier-card text-popover-foreground rounded-lg shadow-lg p-3 animate-fade-in pointer-events-none"
+      className="flex flex-col items-center card-hover text-popover-foreground rounded-lg shadow-lg p-3 animate-fade-in pointer-events-none"
     >
       <div className="font-bold text-foreground text-center">{game.title}</div>
       {game.description && (
