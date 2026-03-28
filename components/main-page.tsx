@@ -10,6 +10,7 @@ import { HoverPopup } from "./hover-popup";
 import { TierRowsList } from "./tier-rows-list";
 import { TierRowsProvider } from "./tier-rows-provider";
 
+import { SettingsMenu } from "./settings-menu";
 import { TierRow } from "./tier-row";
 import { Button } from "./ui/button";
 import { HoverProvider } from "./use-hover";
@@ -87,6 +88,7 @@ export default function MainPage({ initialGames }: Props) {
             <Settings style={{ width: "30px", height: "30px" }} />
           </Button>
         </div>
+
         <HoverProvider>
           <TierRowsProvider tierRows={tierRowData} setTierRows={setTierRowData}>
             <TierRowsList rowOrder={tierRowOrder} tierRows={tierRowData} />
@@ -121,8 +123,7 @@ export default function MainPage({ initialGames }: Props) {
         </HoverProvider>
       </div>
 
-      {/*  Uncomment when there are any settings to show. */}
-      {/* {showSettings && <SettingsMenu onClose={() => setShowSettings(false)} />} */}
+      {showSettings && <SettingsMenu onClose={() => setShowSettings(false)} />}
     </>
   );
 }
