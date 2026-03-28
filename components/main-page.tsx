@@ -111,7 +111,7 @@ export default function MainPage({ initialGames }: Props) {
 
             <div
               key={Tier.Unassigned}
-              className={`gap-2 my-10 flex items-stretch `}
+              className={`gap-4 my-10 pb-10 flex items-stretch `}
             >
               <AddNewItem onAddGame={addGame} />
 
