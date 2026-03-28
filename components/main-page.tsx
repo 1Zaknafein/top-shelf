@@ -4,12 +4,12 @@ import { gameApiRequest } from "@/lib/api";
 import { Game, Tier } from "@/types/types";
 import { Settings } from "lucide-react";
 import { useState } from "react";
-import { AddNewItem } from "./add-new-item";
 import { GameCard } from "./game-card";
 import { HoverPopup } from "./hover-popup";
 import { TierRowsList } from "./tier-rows-list";
 import { TierRowsProvider } from "./tier-rows-provider";
 
+import { AddNewItem } from "./add-game/add-new-item";
 import { SettingsMenu } from "./settings-menu";
 import { TierRow } from "./tier-row";
 import { Button } from "./ui/button";
