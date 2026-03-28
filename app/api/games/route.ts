@@ -35,7 +35,7 @@ export async function PUT(req: Request) {
 
   const body = await req.json();
 
-  const { id, tier, order_in_tier } = body;
+  const { id, tier, order_in_tier, description } = body;
 
   const game = db.data!.games.find((g) => g.id === id);
 
@@ -45,8 +45,31 @@ export async function PUT(req: Request) {
 
   game.tier = tier;
   game.order_in_tier = order_in_tier ?? null;
+  game.description = description ?? "";
 
   await db.write();
 
   return NextResponse.json(game);
+}
+
+// Deleting a game
+export async function DELETE(req: Request) {
+  await initDB();
+
+  const { id } = await req.json();
+
+  if (!id) {
+    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+
+  const idx = db.data!.games.findIndex((g) => g.id === id);
+
+  if (idx === -1) {
+    return NextResponse.json({ error: "Game not found" }, { status: 404 });
+  }
+
+  db.data!.games.splice(idx, 1);
+  await db.write();
+
+  return NextResponse.json({ success: true });
 }
