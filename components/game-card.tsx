@@ -9,12 +9,10 @@ import { pointerIntersection } from "@dnd-kit/collision";
 interface GameCardProps {
   game: Game;
   index: number;
-  imgWidth: number;
-  imgHeight: number;
   row: Tier;
 }
 
-export function GameCard({ game, index, imgWidth, imgHeight }: GameCardProps) {
+export function GameCard({ game, index }: GameCardProps) {
   const { setHover } = useHover();
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -58,12 +56,12 @@ export function GameCard({ game, index, imgWidth, imgHeight }: GameCardProps) {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center w-30 aspect-video overflow-hidden">
           <Image
             src={game.image}
             alt={game.title}
-            width={imgWidth}
-            height={imgHeight}
+            width={300}
+            height={300}
             loading="eager"
             className="object-cover"
           />

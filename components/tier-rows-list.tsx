@@ -6,16 +6,9 @@ import { TierRow } from "./tier-row";
 interface TierRowsListProps {
   rowOrder: Tier[];
   tierRows: Record<Tier, Game[]>;
-  rowMinHeight: number;
-  imgWidth: number;
 }
 
-export function TierRowsList({
-  rowOrder,
-  tierRows,
-  rowMinHeight,
-  imgWidth,
-}: TierRowsListProps) {
+export function TierRowsList({ rowOrder, tierRows }: TierRowsListProps) {
   return (
     <div>
       {rowOrder.map((row) => (
@@ -30,8 +23,6 @@ export function TierRowsList({
                   key={game.id}
                   game={game}
                   index={index}
-                  imgHeight={rowMinHeight}
-                  imgWidth={imgWidth}
                   row={row as Tier}
                 />
               ))}

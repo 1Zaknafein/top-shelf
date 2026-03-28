@@ -7,15 +7,12 @@ import { useState } from "react";
 import { AddNewItem } from "./add-new-item";
 import { GameCard } from "./game-card";
 import { HoverPopup } from "./hover-popup";
-import { SettingsMenu } from "./settings-menu";
 import { TierRowsList } from "./tier-rows-list";
 import { TierRowsProvider } from "./tier-rows-provider";
 
 import { TierRow } from "./tier-row";
 import { Button } from "./ui/button";
 import { HoverProvider } from "./use-hover";
-
-const cardAspectRatio = 16 / 9;
 
 interface Props {
   initialGames: Game[];
@@ -70,9 +67,6 @@ export default function MainPage({ initialGames }: Props) {
   ) as Tier[];
 
   const [showSettings, setShowSettings] = useState(false);
-  const [rowMinHeight, setRowMinHeight] = useState(64);
-
-  const imgWidth = Math.round(rowMinHeight * cardAspectRatio);
 
   return (
     <>
@@ -95,12 +89,7 @@ export default function MainPage({ initialGames }: Props) {
         </div>
         <HoverProvider>
           <TierRowsProvider tierRows={tierRowData} setTierRows={setTierRowData}>
-            <TierRowsList
-              rowOrder={tierRowOrder}
-              tierRows={tierRowData}
-              rowMinHeight={rowMinHeight}
-              imgWidth={imgWidth}
-            />
+            <TierRowsList rowOrder={tierRowOrder} tierRows={tierRowData} />
 
             <HoverPopup setTierRowData={setTierRowData} />
 
@@ -122,8 +111,6 @@ export default function MainPage({ initialGames }: Props) {
                       key={game.id}
                       game={game}
                       index={index}
-                      imgHeight={rowMinHeight}
-                      imgWidth={imgWidth}
                       row={Tier.Unassigned}
                     />
                   ))}
@@ -133,13 +120,9 @@ export default function MainPage({ initialGames }: Props) {
           </TierRowsProvider>
         </HoverProvider>
       </div>
-      {showSettings && (
-        <SettingsMenu
-          onClose={() => setShowSettings(false)}
-          rowMinHeight={rowMinHeight}
-          setRowMinHeight={setRowMinHeight}
-        />
-      )}
+
+      {/*  Uncomment when there are any settings to show. */}
+      {/* {showSettings && <SettingsMenu onClose={() => setShowSettings(false)} />} */}
     </>
   );
 }
