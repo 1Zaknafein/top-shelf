@@ -1,5 +1,7 @@
 "use client";
 
+import { gameApiRequest } from "@/lib/api";
+import { Game } from "@/types/types";
 import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import ReactDOM from "react-dom";
@@ -7,12 +9,17 @@ import { Button } from "./ui/button";
 import { useHover } from "./use-hover";
 
 // Game popup that appears when hovering over a game card.
-export function HoverPopup() {
+
+interface HoverPopupProps {
+  setTierRowData: React.Dispatch<React.SetStateAction<Record<string, Game[]>>>;
+}
+
+export function HoverPopup({ setTierRowData }: HoverPopupProps) {
   const { hover, setHover } = useHover();
   const [editMode, setEditMode] = useState(false);
   const [descValue, setDescValue] = useState(hover?.game.description || "");
-
   const [popupHovered, setPopupHovered] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   if (!hover || typeof window === "undefined") return null;
 
@@ -26,6 +33,7 @@ export function HoverPopup() {
   const handleMouseLeave = () => {
     setPopupHovered(false);
     setEditMode(false);
+    setConfirmDelete(false);
     setHover(null);
   };
 
@@ -60,8 +68,21 @@ export function HoverPopup() {
             </Button>
             <Button
               size="xs"
-              onClick={() => {
-                // TODO: Save description to backend
+              onClick={async () => {
+                const updated = await gameApiRequest("PUT", {
+                  ...game,
+                  description: descValue,
+                });
+                setTierRowData((prev) => {
+                  const newData = { ...prev };
+                  const tier = updated.tier || "unassigned";
+                  newData[tier] = newData[tier].map((g) =>
+                    g.id === updated.id
+                      ? { ...g, description: updated.description }
+                      : g,
+                  );
+                  return newData;
+                });
                 setEditMode(false);
               }}
             >
@@ -88,16 +109,45 @@ export function HoverPopup() {
               >
                 <Pencil />
               </Button>
-              <Button
-                size="icon-xs"
-                variant="destructive"
-                title="Delete"
-                onClick={() => {
-                  // TODO: Delete logic
-                }}
-              >
-                <Trash />
-              </Button>
+              {confirmDelete ? (
+                <>
+                  <Button
+                    size="xs"
+                    variant="destructive"
+                    onClick={async () => {
+                      await gameApiRequest("DELETE", { id: game.id });
+
+                      setTierRowData((prev) => {
+                        const newData = { ...prev };
+                        const tier = game.tier || "unassigned";
+                        newData[tier] = newData[tier].filter(
+                          (g) => g.id !== game.id,
+                        );
+                        return newData;
+                      });
+                      setHover(null);
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    onClick={() => setConfirmDelete(false)}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  size="icon-xs"
+                  variant="destructive"
+                  title="Delete"
+                  onClick={() => setConfirmDelete(true)}
+                >
+                  <Trash />
+                </Button>
+              )}
             </div>
           )}
         </>

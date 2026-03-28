@@ -102,7 +102,7 @@ export default function MainPage({ initialGames }: Props) {
               imgWidth={imgWidth}
             />
 
-            <HoverPopup />
+            <HoverPopup setTierRowData={setTierRowData} />
 
             <span className="flex pt-10 text-2xl font-bold">
               Unassigned games
