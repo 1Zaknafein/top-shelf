@@ -26,7 +26,9 @@ export function AddNewItem({ onAddGame, allGames }: Props) {
     inputValue,
     setInputValue,
     searching,
-    searchResult,
+    searchResults,
+    selectedIndex,
+    handleSelect,
     bulkQueue,
     totalBulk,
     handleStart,
@@ -50,13 +52,17 @@ export function AddNewItem({ onAddGame, allGames }: Props) {
       <DrawerContent className="data-[vaul-drawer-direction=top]:max-h-[50vh] bg-background/96">
         <DrawerHeader>
           <DrawerTitle>
-            {searching ? "Searching..." : searchResult ? "" : "Add game"}
+            {searching
+              ? "Searching..."
+              : searchResults.length > 0
+                ? ""
+                : "Add game"}
           </DrawerTitle>
 
           <DrawerDescription>
             {searching
               ? "Fetching game data..."
-              : searchResult
+              : searchResults.length > 0
                 ? "Add or skip"
                 : "Enter title(s)"}
           </DrawerDescription>
@@ -64,7 +70,7 @@ export function AddNewItem({ onAddGame, allGames }: Props) {
 
         {/* Progress bar */}
         {totalBulk > 0 &&
-          (searching || searchResult || bulkQueue.length > 0) && (
+          (searching || searchResults.length > 0 || bulkQueue.length > 0) && (
             <div className="flex flex-col items-center px-4 mb-2">
               <div className="text-sm mb-1 text-center text-foreground">
                 {processed} / {totalBulk}
@@ -78,7 +84,7 @@ export function AddNewItem({ onAddGame, allGames }: Props) {
             </div>
           )}
 
-        {!searchResult && !searching && (
+        {searchResults.length === 0 && !searching && (
           <AddGameInput
             inputValue={inputValue}
             setInputValue={setInputValue}
@@ -86,9 +92,11 @@ export function AddNewItem({ onAddGame, allGames }: Props) {
           />
         )}
 
-        {searchResult && (
+        {searchResults.length > 0 && (
           <AddGameResult
-            searchResult={searchResult}
+            searchResults={searchResults}
+            selectedIndex={selectedIndex}
+            handleSelect={handleSelect}
             handleAdd={handleAdd}
             handleSkip={handleSkip}
           />

@@ -11,45 +11,45 @@ export function useAddGame(
 ) {
   const [inputValue, setInputValue] = useState("");
   const [searching, setSearching] = useState(false);
-  const [searchResult, setSearchResult] = useState<Partial<Game> | null>(null);
+  const [searchResults, setSearchResults] = useState<Partial<Game>[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [bulkQueue, setBulkQueue] = useState<string[]>([]);
   const [totalBulk, setTotalBulk] = useState(0);
 
   const reset = () => {
-    setSearchResult(null);
+    setSearchResults([]);
+    setSelectedIndex(0);
     setSearching(false);
     setInputValue("");
   };
 
   const processNextInQueue = async (queue?: string[]) => {
     const currentQueue = queue ?? bulkQueue;
-
     if (currentQueue.length === 0) return;
-
     const [next, ...rest] = currentQueue;
-
     setBulkQueue(rest);
     setInputValue(next);
     setSearching(true);
-    setSearchResult(null);
-
+    setSearchResults([]);
+    setSelectedIndex(0);
     try {
       const results = await searchGames(next);
-
       if (!results.length) {
         toast(`No result for "${next}"`);
         processNextInQueue(rest);
         return;
       }
-
-      const game = mapRawgDataToGame(results[0]);
-
-      setSearchResult({
-        ...game,
-        tier: Tier.Unassigned,
-        order_in_tier: null,
-      });
+      const mapped = results
+        .slice(0, 3)
+        .map(mapRawgDataToGame)
+        .map((game) => ({
+          ...game,
+          tier: Tier.Unassigned,
+          order_in_tier: null,
+        }));
+      setSearchResults(mapped);
+      setSelectedIndex(0);
     } catch {
       processNextInQueue(rest);
     } finally {
@@ -72,23 +72,22 @@ export function useAddGame(
   };
 
   const handleAdd = () => {
-    if (!searchResult) return;
-
+    if (!searchResults.length) return;
+    const selected = searchResults[selectedIndex];
+    if (!selected) return;
     const exists = allGames.some(
       (g) =>
         g.title.toLowerCase().trim() ===
-        (searchResult.title ?? "").toLowerCase().trim(),
+        (selected.title ?? "").toLowerCase().trim(),
     );
-
     if (exists) {
       toast("Game already exists!", {
         style: { background: "#f87171", color: "#fff" },
       });
     } else {
-      onAddGame(searchResult);
+      onAddGame(selected);
       toast("Game added!");
     }
-
     reset();
     processNextInQueue();
   };
@@ -98,11 +97,17 @@ export function useAddGame(
     processNextInQueue();
   };
 
+  const handleSelect = (idx: number) => {
+    setSelectedIndex(idx);
+  };
+
   return {
     inputValue,
     setInputValue,
     searching,
-    searchResult,
+    searchResults,
+    selectedIndex,
+    handleSelect,
     bulkQueue,
     totalBulk,
     handleStart,
