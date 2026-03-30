@@ -10,7 +10,7 @@ import { TierRowsList } from "./tier-rows-list";
 import { TierRowsProvider } from "./tier-rows-provider";
 
 import { AddNewItem } from "./add-game/add-new-item";
-import { SettingsMenu } from "./settings-menu";
+import { SettingsMenu } from "./settings/settings-menu";
 import { TierRow } from "./tier-row";
 import { Button } from "./ui/button";
 import { HoverProvider } from "./use-hover";
@@ -126,7 +126,13 @@ export default function MainPage({ initialGames }: Props) {
         </HoverProvider>
       </div>
 
-      {showSettings && <SettingsMenu onClose={() => setShowSettings(false)} />}
+      {showSettings && (
+        <SettingsMenu
+          onClose={() => setShowSettings(false)}
+          tierRowData={tierRowData}
+          setTierRowData={setTierRowData}
+        />
+      )}
     </>
   );
 }
