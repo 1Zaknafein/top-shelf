@@ -1,3 +1,4 @@
+import { gameApiRequest } from "@/lib/api";
 import { Game, Tier } from "@/types/types";
 import { Dispatch, useState } from "react";
 import { Button } from "../ui/button";
@@ -21,7 +22,7 @@ export function MoveGamesToUnassignedButton({
     );
   }
 
-  const moveGamesToUnassignedRow = () => {
+  const moveGamesToUnassignedRow = async () => {
     setShowConfirm(false);
 
     const allGames = Object.values(tierRowData).flat();
@@ -36,6 +37,14 @@ export function MoveGamesToUnassignedButton({
       [Tier.E]: [],
       [Tier.F]: [],
     }));
+
+    for (const game of allGames) {
+      await gameApiRequest("PUT", {
+        ...game,
+        tier: Tier.Unassigned,
+        order_in_tier: null,
+      });
+    }
   };
 
   return (
