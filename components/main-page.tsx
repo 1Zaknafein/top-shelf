@@ -10,10 +10,12 @@ import { TierRowsList } from "./tier-rows-list";
 import { TierRowsProvider } from "./tier-rows-provider";
 
 import { AddNewItem } from "./add-game/add-new-item";
+import { SearchBar } from "./search-bar";
 import { SettingsMenu } from "./settings/settings-menu";
 import { TierRow } from "./tier-row";
 import { Button } from "./ui/button";
 import { HoverProvider } from "./use-hover";
+import { SearchProvider } from "./use-search";
 
 interface Props {
   initialGames: Game[];
@@ -70,7 +72,7 @@ export default function MainPage({ initialGames }: Props) {
   const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <>
+    <SearchProvider>
       <div className="mx:0 md:mx-50">
         <div className="flex flex-col gap-2 items-center justify-center text-center">
           <h1 className="text-4xl font-bold pt-6">Top Shelf</h1>
@@ -80,7 +82,9 @@ export default function MainPage({ initialGames }: Props) {
           </h2>
         </div>
 
-        <div className="flex justify-end mr-1 -mt-3">
+        <div className="flex justify-end mr-1 gap-5 -mt-3">
+          <SearchBar />
+
           <Button
             className="glass-bg rounded-full p-2 h-auto w-auto "
             onClick={() => setShowSettings((v) => !v)}
@@ -133,6 +137,6 @@ export default function MainPage({ initialGames }: Props) {
           setTierRowData={setTierRowData}
         />
       )}
-    </>
+    </SearchProvider>
   );
 }

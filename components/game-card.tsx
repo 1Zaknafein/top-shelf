@@ -3,6 +3,7 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import Image from "next/image";
 import { useRef } from "react";
 import { useHover } from "./use-hover";
+import { useSearch } from "./use-search";
 
 import { pointerIntersection } from "@dnd-kit/collision";
 
@@ -14,6 +15,7 @@ interface GameCardProps {
 
 export function GameCard({ game, index }: GameCardProps) {
   const { setHover } = useHover();
+  const { searchQuery } = useSearch();
   const cardRef = useRef<HTMLDivElement>(null);
 
   const { ref, isDragging } = useSortable({
@@ -26,11 +28,19 @@ export function GameCard({ game, index }: GameCardProps) {
     collisionDetector: pointerIntersection,
   });
 
+  const isHighlighted =
+    searchQuery.length > 0 &&
+    game.title.toLowerCase().includes(searchQuery.toLowerCase());
+
   const glowStyle = game.tier
     ? {
         boxShadow:
           "0 0 6px var(--tier-color-glow), 0 2px 18px var(--tier-color-glow)",
       }
+    : undefined;
+
+  const highlightStyle = isHighlighted
+    ? { outline: "2px solid white", outlineOffset: "2px" }
     : undefined;
 
   const handleMouseEnter = () => {
@@ -49,7 +59,7 @@ export function GameCard({ game, index }: GameCardProps) {
         ref={(node) => {
           cardRef.current = node;
         }}
-        style={glowStyle}
+        style={{ ...glowStyle, ...highlightStyle }}
         role="button"
         tabIndex={0}
         className="game-card rounded-md overflow-hidden cursor-pointer"
