@@ -10,11 +10,13 @@ export function AuthButton() {
   if (status === "loading") return null;
 
   if (session?.user) {
+    const displayName =
+      session.user.username ?? session.user.email ?? session.user.id;
     return (
       <Button
-        className="glass-bg rounded-full p-2 h-auto w-auto"
+        className="rounded-full p-2 h-auto w-auto bg-lime-700/70 hover:bg-lime-600/80 text-white border border-lime-500/50"
         onClick={() => signOut()}
-        title={`Sign out (${session.user.email})`}
+        title={`Signed in as ${displayName} — click to sign out`}
       >
         <LogOut style={{ width: "30px", height: "30px" }} />
       </Button>
@@ -23,7 +25,7 @@ export function AuthButton() {
 
   return (
     <Button
-      className="glass-bg rounded-full p-2 h-auto w-auto"
+      className="glass-bg rounded-full p-2 h-auto w-auto opacity-50 hover:opacity-80"
       onClick={() => signIn()}
       title="Sign in"
     >

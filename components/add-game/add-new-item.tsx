@@ -19,9 +19,10 @@ import { useAddGame } from "./use-add-game";
 interface Props {
   onAddGame: (game: Partial<Game>) => void;
   allGames: Game[];
+  isAuthenticated: boolean;
 }
 
-export function AddNewItem({ onAddGame, allGames }: Props) {
+export function AddNewItem({ onAddGame, allGames, isAuthenticated }: Props) {
   const {
     inputValue,
     setInputValue,
@@ -44,9 +45,19 @@ export function AddNewItem({ onAddGame, allGames }: Props) {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button className="glass-bg w-18 h-18">
-          <Plus style={{ width: "40px", height: "40px" }} />
-        </Button>
+        <div className="relative inline-flex">
+          <Button className="glass-bg w-18 h-18">
+            <Plus style={{ width: "40px", height: "40px" }} />
+          </Button>
+          {!isAuthenticated && (
+            <span
+              className="absolute -top-1 -right-1 bg-yellow-500 text-black text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none"
+              title="Not signed in — changes won't be saved"
+            >
+              !
+            </span>
+          )}
+        </div>
       </DrawerTrigger>
 
       <DrawerContent className="data-[vaul-drawer-direction=top]:max-h-[50vh] bg-background/96">
@@ -64,7 +75,9 @@ export function AddNewItem({ onAddGame, allGames }: Props) {
               ? "Fetching game data..."
               : searchResults.length > 0
                 ? "Add or skip"
-                : "Enter title(s)"}
+                : isAuthenticated
+                  ? "Enter title(s)"
+                  : "Enter title(s) — not signed in, changes won't be saved"}
           </DrawerDescription>
         </DrawerHeader>
 

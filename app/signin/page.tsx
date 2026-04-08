@@ -10,7 +10,7 @@ const errorMessages: Record<string, string> = {
   OAuthCreateAccount: "Could not create account. Please try again.",
   OAuthSignin: "Could not sign in with Google. Please try again.",
   OAuthCallback: "Google sign-in failed. Please try again.",
-  CredentialsSignin: "Incorrect email or password.",
+  CredentialsSignin: "Incorrect username or password.",
 };
 
 function SignInForm() {
@@ -31,14 +31,16 @@ function SignInForm() {
     const form = new FormData(e.currentTarget);
 
     const result = await signIn("credentials", {
-      email: form.get("email"),
+      username: form.get("username"),
       password: form.get("password"),
       callbackUrl,
       redirect: false,
     });
 
     if (result?.error) {
-      setError(errorMessages[result.error] ?? "Incorrect email or password.");
+      setError(
+        errorMessages[result.error] ?? "Incorrect username or password.",
+      );
       setLoading(false);
     } else {
       window.location.href = callbackUrl;
@@ -65,9 +67,9 @@ function SignInForm() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
-            name="email"
-            type="email"
-            placeholder="Email"
+            name="username"
+            type="text"
+            placeholder="Username"
             required
             className="glass-bg rounded-lg px-4 py-2 text-sm outline-none border border-white/20 focus:border-white/60 transition-colors"
           />

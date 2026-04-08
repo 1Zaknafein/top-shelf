@@ -14,6 +14,9 @@ export async function gameApiRequest(
   method: "POST" | "PUT" | "DELETE",
   body: Partial<Game>,
 ): Promise<Game> {
+  // Local-only games (unauthenticated users) must never reach the DB.
+  if (body.id?.startsWith("local-")) return body as Game;
+
   if (method === "POST") {
     return trpcClient.games.create.mutate({
       title: body.title!,

@@ -67,13 +67,32 @@ export default function MainPage({ initialGames }: Props) {
     }));
   };
 
+  const addGameLocal = (game: Partial<Game>) => {
+    const localGame: Game = {
+      ...game,
+      id: `local-${Date.now()}`,
+      tier: Tier.Unassigned,
+      order_in_tier: null,
+    } as Game;
+    setTierRowData((prev) => ({
+      ...prev,
+      [Tier.Unassigned]: [...prev[Tier.Unassigned], localGame],
+    }));
+  };
+
   const tierRowOrder = Object.keys(tierRowData).filter(
     (key) => key !== Tier.Unassigned,
   ) as Tier[];
 
   const [showSettings, setShowSettings] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const isAuthenticated = !!session?.user;
+
+  const [showUnsavedNotice, setShowUnsavedNotice] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      !localStorage.getItem("unsaved-notice-dismissed"),
+  );
 
   return (
     <SearchProvider>
@@ -114,12 +133,11 @@ export default function MainPage({ initialGames }: Props) {
               key={Tier.Unassigned}
               className={`gap-4 my-10 pb-10 flex items-stretch `}
             >
-              {isAuthenticated && (
-                <AddNewItem
-                  onAddGame={addGame}
-                  allGames={Object.values(tierRowData).flat()}
-                />
-              )}
+              <AddNewItem
+                onAddGame={isAuthenticated ? addGame : addGameLocal}
+                allGames={Object.values(tierRowData).flat()}
+                isAuthenticated={isAuthenticated}
+              />
 
               <div className="flex-1 tier-unassigned mb-4">
                 <TierRow id={Tier.Unassigned}>
@@ -144,6 +162,30 @@ export default function MainPage({ initialGames }: Props) {
           tierRowData={tierRowData}
           setTierRowData={setTierRowData}
         />
+      )}
+
+      {showUnsavedNotice && !isAuthenticated && status !== "loading" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="glass-bg rounded-xl p-6 max-w-sm w-full flex flex-col gap-4 border border-white/20 shadow-xl mx-4">
+            <h2 className="text-lg font-bold">Not signed in</h2>
+            <p className="text-sm text-white/70">
+              You can still add and arrange games, but{" "}
+              <span className="text-white font-medium">
+                nothing will be saved
+              </span>{" "}
+              unless you sign in.
+            </p>
+            <Button
+              className="w-full"
+              onClick={() => {
+                localStorage.setItem("unsaved-notice-dismissed", "1");
+                setShowUnsavedNotice(false);
+              }}
+            >
+              Got it
+            </Button>
+          </div>
+        </div>
       )}
     </SearchProvider>
   );

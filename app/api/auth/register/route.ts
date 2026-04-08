@@ -4,7 +4,14 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const registerSchema = z.object({
-  email: z.string().email(),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(32, "Username must be at most 32 characters")
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Username may only contain letters, numbers, and underscores",
+    ),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -19,13 +26,13 @@ export async function POST(req: Request) {
     );
   }
 
-  const { email, password } = parsed.data;
+  const { username, password } = parsed.data;
 
-  const existing = await db.user.findUnique({ where: { email } });
+  const existing = await db.user.findUnique({ where: { username } });
 
   if (existing) {
     return NextResponse.json(
-      { error: "An account with this email already exists." },
+      { error: "Username is already taken." },
       { status: 409 },
     );
   }
@@ -33,7 +40,7 @@ export async function POST(req: Request) {
   const hashed = await bcrypt.hash(password, 12);
 
   await db.user.create({
-    data: { email, password: hashed },
+    data: { username, password: hashed },
   });
 
   return NextResponse.json({ success: true }, { status: 201 });
