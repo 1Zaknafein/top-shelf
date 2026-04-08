@@ -1,10 +1,11 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/react";
+import { ReactNode } from "react";
 
 interface TierRowProps {
   id: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function TierRow({ children, id }: TierRowProps) {

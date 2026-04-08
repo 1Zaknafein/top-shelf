@@ -43,7 +43,7 @@ export function useAddGame(
       const mapped = results
         .slice(0, 3)
         .map(mapRawgDataToGame)
-        .map((game) => ({
+        .map((game: Partial<Game>) => ({
           ...game,
           tier: Tier.Unassigned,
           order_in_tier: null,

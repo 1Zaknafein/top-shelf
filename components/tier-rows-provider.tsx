@@ -2,12 +2,12 @@ import { gameApiRequest } from "@/lib/api";
 import { Game, Tier } from "@/types/types";
 import { move } from "@dnd-kit/helpers";
 import { DragDropProvider } from "@dnd-kit/react";
-import { useRef } from "react";
+import { Dispatch, ReactNode, SetStateAction, useRef } from "react";
 
 interface TierRowsProviderProps {
   tierRows: Record<Tier, Game[]>;
-  setTierRows: React.Dispatch<React.SetStateAction<Record<Tier, Game[]>>>;
-  children: React.ReactNode;
+  setTierRows: Dispatch<SetStateAction<Record<Tier, Game[]>>>;
+  children: ReactNode;
 }
 
 export function TierRowsProvider({

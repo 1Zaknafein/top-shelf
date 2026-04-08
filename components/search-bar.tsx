@@ -1,6 +1,6 @@
 import { Button } from "@base-ui/react";
 import { SearchIcon, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { KeyboardEvent, useRef, useState } from "react";
 import { useSearch } from "./use-search";
 
 export function SearchBar() {
@@ -24,7 +24,7 @@ export function SearchBar() {
     setSearchQuery("");
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleSubmit();
     if (e.key === "Escape") handleClose();
   };

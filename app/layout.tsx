@@ -1,3 +1,4 @@
+import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -26,8 +27,10 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", "font-sans", carterOne.variable)}
     >
       <body className=" bg-image">
-        <main>{children} </main>
-        <Toaster />
+        <Providers>
+          <main>{children} </main>
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

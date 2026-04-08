@@ -3,6 +3,7 @@
 import { gameApiRequest } from "@/lib/api";
 import { Game, Tier } from "@/types/types";
 import { Settings } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { GameCard } from "./game-card";
 import { HoverPopup } from "./hover-popup";
@@ -10,6 +11,7 @@ import { TierRowsList } from "./tier-rows-list";
 import { TierRowsProvider } from "./tier-rows-provider";
 
 import { AddNewItem } from "./add-game/add-new-item";
+import { AuthButton } from "./auth-button";
 import { SearchBar } from "./search-bar";
 import { SettingsMenu } from "./settings/settings-menu";
 import { TierRow } from "./tier-row";
@@ -70,6 +72,8 @@ export default function MainPage({ initialGames }: Props) {
   ) as Tier[];
 
   const [showSettings, setShowSettings] = useState(false);
+  const { data: session } = useSession();
+  const isAuthenticated = !!session?.user;
 
   return (
     <SearchProvider>
@@ -91,6 +95,8 @@ export default function MainPage({ initialGames }: Props) {
           >
             <Settings style={{ width: "30px", height: "30px" }} />
           </Button>
+
+          <AuthButton />
         </div>
 
         <HoverProvider>
@@ -108,10 +114,12 @@ export default function MainPage({ initialGames }: Props) {
               key={Tier.Unassigned}
               className={`gap-4 my-10 pb-10 flex items-stretch `}
             >
-              <AddNewItem
-                onAddGame={addGame}
-                allGames={Object.values(tierRowData).flat()}
-              />
+              {isAuthenticated && (
+                <AddNewItem
+                  onAddGame={addGame}
+                  allGames={Object.values(tierRowData).flat()}
+                />
+              )}
 
               <div className="flex-1 tier-unassigned mb-4">
                 <TierRow id={Tier.Unassigned}>

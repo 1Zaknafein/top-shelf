@@ -3,7 +3,7 @@
 import { gameApiRequest } from "@/lib/api";
 import { Game } from "@/types/types";
 import { Pencil, Trash } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "./ui/button";
 import { useHover } from "./use-hover";
@@ -11,7 +11,7 @@ import { useHover } from "./use-hover";
 // Game popup that appears when hovering over a game card.
 
 interface HoverPopupProps {
-  setTierRowData: React.Dispatch<React.SetStateAction<Record<string, Game[]>>>;
+  setTierRowData: Dispatch<SetStateAction<Record<string, Game[]>>>;
 }
 
 export function HoverPopup({ setTierRowData }: HoverPopupProps) {
@@ -125,7 +125,8 @@ export function HoverPopup({ setTierRowData }: HoverPopupProps) {
                         );
                         return newData;
                       });
-                      setHover(null);
+
+                      handleMouseLeave();
                     }}
                   >
                     Confirm

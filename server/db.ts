@@ -1,23 +1,18 @@
-import { Game } from "@/types/types";
-import { Low } from "lowdb";
-import { JSONFile } from "lowdb/node";
-import path from "path";
+import { PrismaClient } from "@/prisma/generated/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-type Data = {
-  games: Game[];
-};
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-const filePath = path.join(process.cwd(), "data", "db.json");
-const adapter = new JSONFile<Data>(filePath);
+function createPrismaClient() {
+  return new PrismaClient({
+    adapter: new PrismaPg({
+      connectionString: process.env.DATABASE_URL!,
+    }),
+  });
+}
 
-export const db = new Low<Data>(adapter, { games: [] });
+export const db = globalForPrisma.prisma ?? createPrismaClient();
 
-export async function initDB() {
-  await db.read();
-
-  db.data ||= {
-    games: [],
-  };
-
-  await db.write();
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = db;
 }
