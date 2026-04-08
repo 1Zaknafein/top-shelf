@@ -7,61 +7,77 @@ Top Shelf is a web app for building and organizing game tier lists with a smooth
 - Drag-and-drop tier list builder
 - Add games individually or from a list (bulk input)
 - Automatic game data (title + image) via RAWG API
-- Persistent storage (local JSON database)
+- User accounts with username/password or Google OAuth
+- Per-user persistent storage (PostgreSQL)
+- Works without an account — changes are local only
 - Clean, responsive UI (Next.js + React)
+
+## Live Demo
+
+https://top-shelf-nu.vercel.app/
 
 ## Getting Started
 
 1. Install dependencies:
 
-`pnpm install`
+```
+pnpm install
+```
 
-2. Set up environment:
+2. Start the local database:
 
-Create a `.env.local` file and add:
+```
+pnpm db:start
+```
 
-`RAWG_API_KEY=your_api_key_here`
+3. Set up environment — create a `.env` file:
 
-Get your API key from:
-https://rawg.io/apidocs
+```
+DATABASE_URL=postgresql://topshelf:topshelf@localhost:5432/topshelf
+NEXTAUTH_SECRET=your_secret_here
+NEXTAUTH_URL=http://localhost:3000
+AUTH_GOOGLE_ID=your_google_client_id
+AUTH_GOOGLE_SECRET=your_google_client_secret
+RAWG_API_KEY=your_rawg_api_key
+```
 
-3. Run the app:
+RAWG API key: https://rawg.io/apidocs  
+Google OAuth credentials: https://console.cloud.google.com
 
-`pnpm dev`
+4. Apply database migrations:
 
-4. Open in browser:
+```
+pnpm db:migrate
+```
+
+5. Run the app:
+
+```
+pnpm dev
+```
+
+6. Open in browser:
 
 http://localhost:3000
 
-
 ## How it works
+
 - Game data is fetched from the RAWG API
-- Data is stored locally in data/db.json
-- API routes handle all read/write operations
+- Authenticated users have their tier lists saved to PostgreSQL
+- Unauthenticated users can still build tier lists, but data lives in local state only
+- API calls go through tRPC; auth is handled by NextAuth with PrismaAdapter
 
 ## Tech Stack
+
 - Next.js (App Router)
-- React
-- TypeScript
-- lowdb (JSON database)
+- React / TypeScript
+- tRPC
+- NextAuth.js (credentials + Google OAuth)
+- Prisma + PostgreSQL
 - RAWG API
-
-
-## Demo
-
-[top-shelf-demo.webm](https://github.com/user-attachments/assets/3e56256b-e517-4b1a-a982-3c26065ee392)
-
-
-## Notes
-
-This project is designed as a demo piece.
-It uses a local JSON database, so data is shared across users if deployed.
-
-
-
+- Tailwind CSS + shadcn/ui
+- dnd-kit (drag and drop)
 
 ## License
 
 MIT
-
-
