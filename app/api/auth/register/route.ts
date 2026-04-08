@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const registerSchema = z.object({
-  username: z
+  name: z
     .string()
     .min(3, "Username must be at least 3 characters")
     .max(32, "Username must be at most 32 characters")
@@ -26,9 +26,9 @@ export async function POST(req: Request) {
     );
   }
 
-  const { username, password } = parsed.data;
+  const { name, password } = parsed.data;
 
-  const existing = await db.user.findUnique({ where: { username } });
+  const existing = await db.user.findUnique({ where: { name } });
 
   if (existing) {
     return NextResponse.json(
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   const hashed = await bcrypt.hash(password, 12);
 
   await db.user.create({
-    data: { username, password: hashed },
+    data: { name, password: hashed },
   });
 
   return NextResponse.json({ success: true }, { status: 201 });

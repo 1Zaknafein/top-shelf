@@ -17,13 +17,13 @@ export default function RegisterPage() {
     setLoading(true);
 
     const form = new FormData(e.currentTarget);
-    const username = form.get("username") as string;
+    const name = form.get("username") as string;
     const password = form.get("password") as string;
 
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ name, password }),
     });
 
     if (!res.ok) {
@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
     // Auto sign-in after successful registration
     const result = await signIn("credentials", {
-      username,
+      username: name,
       password,
       redirect: false,
     });

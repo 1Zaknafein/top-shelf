@@ -11,7 +11,7 @@ export function AuthButton() {
 
   if (session?.user) {
     const displayName =
-      session.user.username ?? session.user.email ?? session.user.id;
+      session.user.name ?? session.user.email ?? session.user.id;
     return (
       <Button
         className="rounded-full p-2 h-auto w-auto bg-lime-700/70 hover:bg-lime-600/80 text-white border border-lime-500/50"

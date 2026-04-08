@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.username || !credentials?.password) return null;
 
         const user = await db.user.findUnique({
-          where: { username: credentials.username },
+          where: { name: credentials.username },
         });
 
         if (!user?.password) return null;
@@ -41,16 +41,11 @@ export const authOptions: NextAuthOptions = {
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.username =
-          (user as { username?: string | null }).username ?? null;
       }
       return token;
     },
     session({ session, token }) {
       if (token.id) session.user.id = token.id as string;
-      if (token.username !== undefined)
-        (session.user as { username?: string | null }).username =
-          token.username as string | null;
       return session;
     },
   },
