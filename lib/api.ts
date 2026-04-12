@@ -10,6 +10,12 @@ const trpcClient = createTRPCClient<AppRouter>({
   ],
 });
 
+export async function findGamesByTitlesInDb(
+  titles: string[],
+): Promise<{ title: string; image: string; description: string }[]> {
+  return trpcClient.games.findByTitles.query({ titles });
+}
+
 export async function gameApiRequest(
   method: "POST" | "PUT" | "DELETE",
   body: Partial<Game>,

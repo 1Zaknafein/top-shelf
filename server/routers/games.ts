@@ -3,22 +3,23 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
-function mapGame(g: {
+function mapGame(ug: {
   id: string;
-  title: string;
-  image: string;
-  description: string;
   tier: string;
   orderInTier: number | null;
-  userId: string;
+  game: {
+    title: string;
+    image: string;
+    description: string;
+  };
 }): Game {
   return {
-    id: g.id,
-    title: g.title,
-    image: g.image,
-    description: g.description,
-    tier: g.tier as Tier,
-    order_in_tier: g.orderInTier,
+    id: ug.id,
+    title: ug.game.title,
+    image: ug.game.image,
+    description: ug.game.description,
+    tier: ug.tier as Tier,
+    order_in_tier: ug.orderInTier,
   };
 }
 
@@ -33,13 +34,31 @@ function isPrismaError(e: unknown, code: string): boolean {
 
 export const gamesRouter = router({
   getAll: protectedProcedure.query(async ({ ctx }): Promise<Game[]> => {
-    const games = await ctx.db.game.findMany({
+    const userGames = await ctx.db.userGame.findMany({
       where: { userId: ctx.userId },
+      include: { game: true },
       orderBy: [{ tier: "asc" }, { orderInTier: "asc" }],
     });
 
-    return games.map(mapGame);
+    return userGames.map(mapGame);
   }),
+
+  findByTitles: protectedProcedure
+    .input(z.object({ titles: z.array(z.string().min(1)).min(1) }))
+    .query(async ({ ctx, input }) => {
+      const games = await ctx.db.game.findMany({
+        where: {
+          OR: input.titles.map((t) => ({
+            title: { equals: t, mode: "insensitive" },
+          })),
+        },
+      });
+      return games.map((g) => ({
+        title: g.title,
+        image: g.image,
+        description: g.description,
+      }));
+    }),
 
   create: protectedProcedure
     .input(
@@ -50,17 +69,26 @@ export const gamesRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }): Promise<Game> => {
+      const game = await ctx.db.game.upsert({
+        where: { title: input.title },
+        update: {},
+        create: {
+          title: input.title,
+          image: input.image,
+          description: input.description,
+        },
+      });
+
       try {
-        const game = await ctx.db.game.create({
+        const userGame = await ctx.db.userGame.create({
           data: {
-            title: input.title,
-            image: input.image,
-            description: input.description,
-            tier: Tier.Unassigned,
             userId: ctx.userId,
+            gameId: game.id,
+            tier: Tier.Unassigned,
           },
+          include: { game: true },
         });
-        return mapGame(game);
+        return mapGame(userGame);
       } catch (e) {
         if (isPrismaError(e, "P2002")) {
           throw new TRPCError({
@@ -83,17 +111,18 @@ export const gamesRouter = router({
     )
     .mutation(async ({ ctx, input }): Promise<Game> => {
       try {
-        const game = await ctx.db.game.update({
+        const userGame = await ctx.db.userGame.update({
           where: { id: input.id, userId: ctx.userId },
           data: {
             tier: input.tier,
             orderInTier: input.order_in_tier ?? null,
             ...(input.description !== undefined && {
-              description: input.description,
+              game: { update: { description: input.description } },
             }),
           },
+          include: { game: true },
         });
-        return mapGame(game);
+        return mapGame(userGame);
       } catch (e) {
         if (isPrismaError(e, "P2025")) {
           throw new TRPCError({ code: "NOT_FOUND" });
@@ -106,7 +135,7 @@ export const gamesRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }): Promise<{ success: true }> => {
       try {
-        await ctx.db.game.delete({
+        await ctx.db.userGame.delete({
           where: { id: input.id, userId: ctx.userId },
         });
         return { success: true };

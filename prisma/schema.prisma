@@ -52,21 +52,29 @@ model User {
   emailVerified DateTime?
   password      String?
 
-  accounts Account[]
-  sessions Session[]
-  games    Game[]
+  accounts  Account[]
+  sessions  Session[]
+  userGames UserGame[]
 }
 
 model Game {
-  id          String  @id @default(cuid())
-  title       String
+  id          String     @id @default(cuid())
+  title       String     @unique
   image       String
-  description String  @default("")
-  tier        String  @default("unassigned")
-  orderInTier Int?    @map("order_in_tier")
+  description String     @default("")
+
+  userGames UserGame[]
+}
+
+model UserGame {
+  id          String @id @default(cuid())
   userId      String
+  gameId      String
+  tier        String @default("unassigned")
+  orderInTier Int?   @map("order_in_tier")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, title])
+  @@unique([userId, gameId])
 }

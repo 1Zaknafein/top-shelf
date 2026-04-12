@@ -35,7 +35,7 @@ export function AddNewItem({ onAddGame, allGames, isAuthenticated }: Props) {
     handleStart,
     handleAdd,
     handleSkip,
-  } = useAddGame(onAddGame, allGames);
+  } = useAddGame(onAddGame, allGames, isAuthenticated);
 
   const progress =
     totalBulk > 0 ? ((totalBulk - bulkQueue.length) / totalBulk) * 100 : 0;
