@@ -24,7 +24,14 @@ export async function GET(req: NextRequest) {
 
     const data = await res.json();
 
-    return NextResponse.json(data.results);
+    return NextResponse.json(
+      data.results.map(
+        (g: { name: string; background_image: string | null }) => ({
+          name: g.name,
+          background_image: g.background_image,
+        }),
+      ),
+    );
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
