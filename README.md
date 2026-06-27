@@ -5,11 +5,10 @@ Top Shelf is a web app for building and organizing game tier lists with a smooth
 ## Features
 
 - Drag-and-drop tier list builder
-- Add games individually or from a list (bulk input)
+- Add games individually or from a list
 - Automatic game data (title + image) via RAWG API
-- User accounts with username/password or Google OAuth
-- Per-user persistent storage (PostgreSQL)
-- Works without an account — changes are local only
+- User accounts with username/password or Google OAuth, for storing lists.
+- Can use without an account, although the list will not persist after page reload.
 - Clean, responsive UI (Next.js + React)
 
 ## Live Demo
